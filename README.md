@@ -1,5 +1,7 @@
 # Wkhtmltopdf.NetCore
 
+[![Build status](https://ci.appveyor.com/api/projects/status/uws43d45pusuhq3a?svg=true)](https://ci.appveyor.com/project/fpanaccia/wkhtmltopdf-netcore-qft6o)
+
 This project implements the library wkhtmltopdf for net core, working in windows and linux and docker.
 
 For more information about how to use it, go to https://github.com/fpanaccia/Wkhtmltopdf.NetCore.Example
