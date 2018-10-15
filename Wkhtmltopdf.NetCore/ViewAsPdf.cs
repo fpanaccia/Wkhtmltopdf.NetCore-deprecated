@@ -47,5 +47,19 @@ namespace Wkhtmltopdf.NetCore
             pdfStream.Position = 0;
             return new FileStreamResult(pdfStream, "application/pdf");
         }
+
+        public async Task<byte[]> GetByteArrayViewInHtml<T>(string ViewInHtml, T model, ExpandoObject viewBag = null)
+        {
+            try
+            {
+                var view = await _engine.CompileRenderAsync("template", ViewInHtml, model, viewBag);
+                return base.GetPDF(view);
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
     }
 }
