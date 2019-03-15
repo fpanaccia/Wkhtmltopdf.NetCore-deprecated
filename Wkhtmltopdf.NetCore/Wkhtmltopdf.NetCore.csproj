@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyVersion>1.1.1.1</AssemblyVersion>
     <FileVersion>1.1.1.1</FileVersion>
-    <Version>1.1.1-1</Version>
+    <Version>1.1.2</Version>
     <Description>This project implements the library wkhtmltopdf for net core, working in windows and linux and docker.
 
 For more information about how to use it, go to https://github.com/fpanaccia/Wkhtmltopdf.NetCore.Example</Description>
