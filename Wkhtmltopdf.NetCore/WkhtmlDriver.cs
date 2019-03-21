@@ -56,6 +56,7 @@ namespace Wkhtmltopdf.NetCore
                 {
                     FileName = RotativaLocation,
                     Arguments = switches,
+                    UseShellExecute = false,
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
                     RedirectStandardInput = true,
