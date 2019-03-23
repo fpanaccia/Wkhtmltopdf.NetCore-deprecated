@@ -7,30 +7,35 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Routing;
-using RazorLight;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Options;
 using System;
-using System.Dynamic;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using Wkhtmltopdf.NetCore.FileEngine;
 
 namespace Wkhtmltopdf.NetCore
 {
-    public class ViewAsPdf : HtmlAsPdf
+    public class RazorViewToStringRenderer : IRazorViewToStringRenderer
     {
         private IRazorViewEngine _viewEngine;
         private ITempDataProvider _tempDataProvider;
         private IServiceProvider _serviceProvider;
 
-        public ViewAsPdf(
-    IRazorViewEngine viewEngine,
-    ITempDataProvider tempDataProvider,
-    IServiceProvider serviceProvider)
+        public RazorViewToStringRenderer(
+            IRazorViewEngine viewEngine,
+            ITempDataProvider tempDataProvider,
+            IServiceProvider serviceProvider)
         {
             _viewEngine = viewEngine;
             _tempDataProvider = tempDataProvider;
             _serviceProvider = serviceProvider;
         }
+
         public async Task<string> RenderViewToStringAsync<TModel>(string viewName, TModel model)
         {
             var actionContext = GetActionContext();
@@ -58,6 +63,17 @@ namespace Wkhtmltopdf.NetCore
                 return output.ToString();
             }
         }
+
+        public async Task<string> RenderHtmlToStringAsync<TModel>(string html, TModel model)
+        {
+            var razorOptions = _serviceProvider.GetRequiredService<IOptions<RazorViewEngineOptions>>().Value;
+            razorOptions.FileProviders.Clear();
+            razorOptions.FileProviders.Add(new FileProvider(html));
+            razorOptions.FileProviders.Add(new PhysicalFileProvider(AppContext.BaseDirectory));
+
+            return await RenderViewToStringAsync("fakeView", model);
+        }
+
         private IView FindView(ActionContext actionContext, string viewName)
         {
             var getViewResult = _viewEngine.GetView(executingFilePath: null, viewPath: viewName, isMainPage: true);
@@ -82,66 +98,13 @@ namespace Wkhtmltopdf.NetCore
 
         private ActionContext GetActionContext()
         {
-            var httpContext = new DefaultHttpContext();
-            httpContext.RequestServices = _serviceProvider;
-            return new ActionContext(httpContext, new RouteData(), new ActionDescriptor());
+            return new ActionContext(new DefaultHttpContext { RequestServices = _serviceProvider }, new RouteData(), new ActionDescriptor());
         }
+    }
 
-
-
-
-        RazorLightEngine _engine;
-        public ViewAsPdf(string viewsPath = null)
-        {
-            _engine = new RazorLightEngineBuilder()
-                            .UseFilesystemProject(viewsPath)
-                            .UseMemoryCachingProvider()
-                            .Build();
-        }
-
-        public ViewAsPdf()
-        {
-            _engine = new RazorLightEngineBuilder()
-                            .UseFilesystemProject(Directory.GetCurrentDirectory())
-                            .UseMemoryCachingProvider()
-                            .Build();
-        }
-
-        public async Task<byte[]> GetByteArray<T>(string View, T model, ExpandoObject viewBag = null)
-        {
-            try
-            {
-                var html = await _engine.CompileRenderAsync(View, model, viewBag);
-                return base.GetPDF(html);
-            }
-            catch (System.Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        public async Task<IActionResult> GetPdf<T>(string View, T model, ExpandoObject viewBag = null)
-        {
-            var html = await _engine.CompileRenderAsync(View, model, viewBag);
-            var byteArray = base.GetPDF(html);
-            MemoryStream pdfStream = new MemoryStream();
-            pdfStream.Write(byteArray, 0, byteArray.Length);
-            pdfStream.Position = 0;
-            return new FileStreamResult(pdfStream, "application/pdf");
-        }
-
-        public async Task<byte[]> GetByteArrayViewInHtml<T>(string ViewInHtml, T model, ExpandoObject viewBag = null)
-        {
-            try
-            {
-                var view = await _engine.CompileRenderAsync("template", ViewInHtml, model, viewBag);
-                return base.GetPDF(view);
-            }
-            catch (System.Exception ex)
-            {
-                throw ex;
-            }
-        }
-
+    public interface IRazorViewToStringRenderer
+    {
+        Task<string> RenderViewToStringAsync<TModel>(string viewName, TModel model);
+        Task<string> RenderHtmlToStringAsync<TModel>(string html, TModel model);
     }
 }

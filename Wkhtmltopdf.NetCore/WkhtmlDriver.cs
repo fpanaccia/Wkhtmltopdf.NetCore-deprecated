@@ -30,7 +30,7 @@ namespace Wkhtmltopdf.NetCore
                 html = SpecialCharsEncode(html);
             }
 
-            if (RotativaConfiguration.IsWindows)
+            if (WkhtmltopdfConfiguration.IsWindows)
             {
                 wkhtmlPath = Path.Combine(wkhtmlPath, "Windows");
             }
@@ -42,7 +42,7 @@ namespace Wkhtmltopdf.NetCore
 
 
             //TODO OSX
-            var RotativaLocation = Path.Combine(wkhtmlPath, RotativaConfiguration.IsWindows ? "wkhtmltopdf.exe" : Path.Combine(wkhtmlPath, "wkhtmltopdf"));
+            var RotativaLocation = Path.Combine(wkhtmlPath, WkhtmltopdfConfiguration.IsWindows ? "wkhtmltopdf.exe" : Path.Combine(wkhtmlPath, "wkhtmltopdf"));
 
             if (!File.Exists(RotativaLocation))
             {
