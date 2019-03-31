@@ -16,7 +16,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Wkhtmltopdf.NetCore.FileEngine;
 
 namespace Wkhtmltopdf.NetCore
 {
@@ -66,12 +65,9 @@ namespace Wkhtmltopdf.NetCore
 
         public async Task<string> RenderHtmlToStringAsync<TModel>(string html, TModel model)
         {
-            var razorOptions = _serviceProvider.GetRequiredService<IOptions<RazorViewEngineOptions>>().Value;
-            razorOptions.FileProviders.Clear();
-            razorOptions.FileProviders.Add(new FileProvider(html));
-            razorOptions.FileProviders.Add(new PhysicalFileProvider(AppContext.BaseDirectory));
-
-            return await RenderViewToStringAsync("fakeView", model);
+            var fileProvider = _serviceProvider.GetRequiredService<UpdateableFileProvider>();
+            fileProvider.UpdateContent(html);
+            return await RenderViewToStringAsync("/Views/FakeView.cshtml", model);
         }
 
         private IView FindView(ActionContext actionContext, string viewName)
