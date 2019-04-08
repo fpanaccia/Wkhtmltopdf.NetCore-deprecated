@@ -67,6 +67,30 @@ namespace Wkhtmltopdf.NetCore
         [OptionFlag("-g")]
         public bool IsGrayScale { get; set; }
 
+        /// <summary>
+        /// Path to header HTML file.
+        /// </summary>
+        [OptionFlag("--header-html")]
+        public string HeaderHtml { get; set; }
+
+        /// <summary>
+        /// Sets the header spacing.
+        /// </summary>
+        [OptionFlag("--header-spacing")]
+        public int? HeaderSpacing { get; set; }
+
+        /// <summary>
+        /// Path to footer HTML file.
+        /// </summary>
+        [OptionFlag("--footer-html")]
+        public string FooterHtml { get; set; }
+
+        /// <summary>
+        /// Sets the footer spacing.
+        /// </summary>
+        [OptionFlag("--footer-spacing")]
+        public int? FooterSpacing { get; set; }
+
         protected string GetConvertOptions()
         {
             var result = new StringBuilder();
