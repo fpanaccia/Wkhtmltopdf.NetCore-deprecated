@@ -7,14 +7,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.FileProviders;
-using Microsoft.Extensions.Options;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Wkhtmltopdf.NetCore
@@ -65,8 +60,7 @@ namespace Wkhtmltopdf.NetCore
 
         public async Task<string> RenderHtmlToStringAsync<TModel>(string html, TModel model)
         {
-            var fileProvider = _serviceProvider.GetRequiredService<UpdateableFileProvider>();
-            fileProvider.UpdateContent(html);
+            UpdateableFileProvider.UpdateContent(html);
             return await RenderViewToStringAsync("/Views/FakeView.cshtml", model);
         }
 
@@ -92,15 +86,36 @@ namespace Wkhtmltopdf.NetCore
             throw new InvalidOperationException(errorMessage);
         }
 
+        public void AddView(string path, string viewHTML)
+        {
+            if (ExistsView(path))
+            {
+                throw new Exception($"View {path} already exists");
+            }
+
+            UpdateableFileProvider.Views.Add($"/Views/{path}.cshtml", new ViewFileInfo(viewHTML));
+        }
+
+        public bool ExistsView(string path)
+        {
+            return UpdateableFileProvider.Views.Any(x => x.Key == $"/Views/{path}.cshtml");
+        }
+
+        public void UpdateView(string path, string viewHTML)
+        {
+            if (ExistsView(path))
+            {
+                UpdateableFileProvider.UpdateContent(viewHTML, $"/Views/{path}.cshtml");
+            }
+            else
+            {
+                throw new Exception($"View {path} does not exists");
+            }
+        }
+
         private ActionContext GetActionContext()
         {
             return new ActionContext(new DefaultHttpContext { RequestServices = _serviceProvider }, new RouteData(), new ActionDescriptor());
         }
-    }
-
-    public interface IRazorViewToStringRenderer
-    {
-        Task<string> RenderViewToStringAsync<TModel>(string viewName, TModel model);
-        Task<string> RenderHtmlToStringAsync<TModel>(string html, TModel model);
     }
 }

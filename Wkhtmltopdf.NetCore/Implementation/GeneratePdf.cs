@@ -1,16 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Abstractions;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc.Razor;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Mvc.ViewEngines;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.AspNetCore.Routing;
+﻿using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Dynamic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Wkhtmltopdf.NetCore
@@ -74,14 +64,11 @@ namespace Wkhtmltopdf.NetCore
                 throw ex;
             }
         }
-    }
 
-    public interface IGeneratePdf
-    {
-        Task<IActionResult> GetPdfViewInHtml<T>(string ViewInHtml, T model);
-        Task<byte[]> GetByteArrayViewInHtml<T>(string ViewInHtml, T model);
-        Task<IActionResult> GetPdf<T>(string View, T model);
-        Task<byte[]> GetByteArray<T>(string View, T model);
-        byte[] GetPDF(string html);
+        public void AddView(string path, string viewHTML) => _engine.AddView(path, viewHTML);
+
+        public bool ExistsView(string path) => _engine.ExistsView(path);
+
+        public void UpdateView(string path, string viewHTML) => _engine.UpdateView(path, viewHTML);
     }
 }

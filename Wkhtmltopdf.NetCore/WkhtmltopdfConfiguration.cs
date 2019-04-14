@@ -62,12 +62,8 @@ namespace Wkhtmltopdf.NetCore
 
             if (services.BuildServiceProvider().GetService<IControllerFactory>() == null)
             {
-                //services.TryAddTransient<IRazorViewEngine, RazorViewEngine>();
                 var _hostingEnvironment = new HostingEnvironment();
                 services.TryAddSingleton<IHostingEnvironment>(_hostingEnvironment);
-                /*services.TryAddSingleton<IConfiguration>(new ConfigurationBuilder()
-                                        .SetBasePath(Directory.GetCurrentDirectory())
-                                        .Build());*/
                 services.AddLogging();
                 services.AddMvc();
             }
