@@ -9,13 +9,13 @@ namespace Wkhtmltopdf.NetCore
 {
     public class ViewFileInfo : IFileInfo
     {
-        private readonly string _content;
+        public readonly string Content;
 
         public ViewFileInfo(string content)
         {
-            _content = content;
+            Content = content;
             ChangeToken = new CancellationChangeToken(TokenSource.Token);
-            Exists = _content != null;
+            Exists = Content != null;
         }
 
         public bool Exists { get; }
@@ -29,7 +29,7 @@ namespace Wkhtmltopdf.NetCore
 
         public Stream CreateReadStream()
         {
-            return new MemoryStream(Encoding.UTF8.GetBytes(_content));
+            return new MemoryStream(Encoding.UTF8.GetBytes(Content));
         }
     }
 }

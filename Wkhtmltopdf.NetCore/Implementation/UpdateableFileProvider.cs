@@ -26,8 +26,11 @@ namespace Wkhtmltopdf.NetCore
         {
             var viewPath = string.IsNullOrWhiteSpace(view) ? "/Views/FakeView.cshtml" : view;
             var old = Views[viewPath];
-            old.TokenSource.Cancel();
-            Views[viewPath] = new ViewFileInfo(content);
+            if(old.Content != content)
+            {
+                old.TokenSource.Cancel();
+                Views[viewPath] = new ViewFileInfo(content);
+            }
         }
 
         public void CancelRazorPages()
