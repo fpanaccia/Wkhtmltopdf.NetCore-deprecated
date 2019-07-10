@@ -3,7 +3,7 @@
 ![NuGet](https://buildstats.info/nuget/Wkhtmltopdf.NetCore)
 [![Build status](https://ci.appveyor.com/api/projects/status/uws43d45pusuhq3a?svg=true)](https://ci.appveyor.com/project/fpanaccia/wkhtmltopdf-netcore-qft6o)
 
-This project implements the library wkhtmltopdf for net core, working in windows and linux and docker.
+This project implements the library wkhtmltopdf for asp net core, working in windows and linux and docker.
 
 For more information about how to use it, go to https://github.com/fpanaccia/Wkhtmltopdf.NetCore.Example
 
@@ -23,13 +23,13 @@ The structure will need to be on the folder of your project
         |   |       └── wkhtmltopdf.exe
         └── Example.sln
 
-Those files will need to be included in your project with the propierty "Copy Always", then add to your Startup.cs in ConfigureServices method, this line "Wkhtmltopdf.NetCore.RotativaConfiguration.Setup();", like this
+Those files will need to be included in your project with the propierty "Copy Always", then add to your Startup.cs in ConfigureServices method, this line "services.AddWkhtmltopdf();", like this
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            Wkhtmltopdf.NetCore.RotativaConfiguration.Setup();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddWkhtmltopdf();
         }
         
 If you are using the docker container for net core provided from microsoft, you need to add this line to the dockerfile "RUN apt-get update -qq && apt-get -y install libgdiplus libc6-dev", like this
