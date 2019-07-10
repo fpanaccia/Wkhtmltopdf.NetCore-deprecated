@@ -2,13 +2,15 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net472</TargetFrameworks>
-    <AssemblyVersion>2.0.2.0</AssemblyVersion>
-    <FileVersion>2.0.2.0</FileVersion>
-    <Version>2.0.2-preview</Version>
-    <Description>This project implements the library wkhtmltopdf for net core, working in windows and linux and docker.
+    <AssemblyVersion>2.0.0.0</AssemblyVersion>
+    <FileVersion>2.0.0.0</FileVersion>
+    <Version>2.0.0</Version>
+    <Description>This project implements the library wkhtmltopdf for asp net core and a view engine, working in windows and linux and docker.
 
 For more information about how to use it, go to https://github.com/fpanaccia/Wkhtmltopdf.NetCore.Example</Description>
     <RepositoryUrl>https://github.com/fpanaccia/Wkhtmltopdf.NetCore</RepositoryUrl>
+    <PackageReleaseNotes>New Razor Engine, Cached Views, Better Razor Compatibility.
+Easy Configuration</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
