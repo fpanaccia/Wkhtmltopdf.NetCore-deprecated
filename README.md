@@ -3,7 +3,7 @@
 ![NuGet](https://buildstats.info/nuget/Wkhtmltopdf.NetCore)
 [![Build status](https://ci.appveyor.com/api/projects/status/uws43d45pusuhq3a?svg=true)](https://ci.appveyor.com/project/fpanaccia/wkhtmltopdf-netcore-qft6o)
 
-This project implements the library wkhtmltopdf for asp net core, working in windows and linux and docker.
+This project implements the library wkhtmltopdf for asp net core, working in Windows, Linux, macOS and docker.
 
 For more information about how to use it, go to https://github.com/fpanaccia/Wkhtmltopdf.NetCore.Example
 
@@ -18,6 +18,8 @@ The structure will need to be on the folder of your project
         |   ├── Example.csproj
         |   └── Rotativa
         |   |   ├── Linux
+        |   |   |   └── wkhtmltopdf
+        |   |   ├── Mac
         |   |   |   └── wkhtmltopdf
         |   |   └── Windows
         |   |       └── wkhtmltopdf.exe

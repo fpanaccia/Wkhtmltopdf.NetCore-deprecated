@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace Wkhtmltopdf.NetCore
@@ -13,7 +14,6 @@ namespace Wkhtmltopdf.NetCore
         /// <param name="wkhtmlPath">Path to wkthmltopdf\wkthmltoimage.</param>
         /// <param name="switches">Switches that will be passed to wkhtmltopdf binary.</param>
         /// <param name="html">String containing HTML code that should be converted to PDF.</param>
-        /// <param name="wkhtmlExe"></param>
         /// <returns>PDF as byte array.</returns>
         public static byte[] Convert(string wkhtmlPath, string switches, string html)
         {
@@ -30,23 +30,24 @@ namespace Wkhtmltopdf.NetCore
                 html = SpecialCharsEncode(html);
             }
 
-            if (WkhtmltopdfConfiguration.IsWindows)
+            string rotativaLocation;
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                wkhtmlPath = Path.Combine(wkhtmlPath, "Windows");
+                rotativaLocation = Path.Combine(wkhtmlPath, "Windows", "wkhtmltopdf.exe");
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                rotativaLocation = Path.Combine(wkhtmlPath, "Mac", "wkhtmltopdf");
             }
             else
             {
-                //linux
-                wkhtmlPath = Path.Combine(wkhtmlPath, "Linux");
+                rotativaLocation = Path.Combine(wkhtmlPath, "Linux", "wkhtmltopdf");
             }
 
-
-            //TODO OSX
-            var RotativaLocation = Path.Combine(wkhtmlPath, WkhtmltopdfConfiguration.IsWindows ? "wkhtmltopdf.exe" : Path.Combine(wkhtmlPath, "wkhtmltopdf"));
-
-            if (!File.Exists(RotativaLocation))
+            if (!File.Exists(rotativaLocation))
             {
-                throw new Exception("wkhtmltopdf not found, searched for " + RotativaLocation);
+                throw new Exception("wkhtmltopdf not found, searched for " + rotativaLocation);
             }
 
             var proc = new Process();
@@ -54,7 +55,7 @@ namespace Wkhtmltopdf.NetCore
             {
                 proc.StartInfo = new ProcessStartInfo
                 {
-                    FileName = RotativaLocation,
+                    FileName = rotativaLocation,
                     Arguments = switches,
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
