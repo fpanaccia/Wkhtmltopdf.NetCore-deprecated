@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Hosting.Internal;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Hosting.Internal;
 using Microsoft.Extensions.ObjectPool;
 using System;
 using System.Diagnostics;
@@ -20,7 +22,7 @@ namespace Wkhtmltopdf.NetCore
         /// <summary>
         /// Setup Rotativa library
         /// </summary>
-        /// <param name="env">The IHostingEnvironment object</param>
+        /// <param name="services">The IServiceCollection object</param>
         /// <param name="wkhtmltopdfRelativePath">Optional. Relative path to the directory containing wkhtmltopdf. Default is "Rotativa". Download at https://wkhtmltopdf.org/downloads.html</param>
         public static IServiceCollection AddWkhtmltopdf(this IServiceCollection services, string wkhtmltopdfRelativePath = "Rotativa")
         {
@@ -28,33 +30,27 @@ namespace Wkhtmltopdf.NetCore
 
             if (!Directory.Exists(RotativaPath))
             {
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                {
-                    throw new Exception("Folder containing wkhtmltopdf.exe not found, searched for " + RotativaPath);
-                }
-
                 throw new Exception("Folder containing wkhtmltopdf not found, searched for " + RotativaPath);
             }
-            
-            var updateableFileProvider = new UpdateableFileProvider();
-            var diagnosticSource = new DiagnosticListener("Microsoft.AspNetCore");
-            services.TryAddSingleton<ObjectPoolProvider, DefaultObjectPoolProvider>();
-            services.TryAddSingleton<DiagnosticSource>(diagnosticSource);
+
             services.TryAddTransient<ITempDataProvider, SessionStateTempDataProvider>();
+            services.AddMvc().AddRazorRuntimeCompilation();
             services.TryAddTransient<IRazorViewToStringRenderer, RazorViewToStringRenderer>();
             services.TryAddTransient<IGeneratePdf, GeneratePdf>();
-            services.TryAddSingleton(updateableFileProvider);
 
-            if (services.BuildServiceProvider().GetService<IControllerFactory>() == null)
+            var mvcBuilder = services.BuildServiceProvider().GetService<IMvcCoreBuilder>();
+            if (mvcBuilder == null)
             {
-                var _hostingEnvironment = new HostingEnvironment();
-                services.TryAddSingleton<IHostingEnvironment>(_hostingEnvironment);
-                services.AddLogging();
-                services.AddMvc();
+                services.AddMvc().AddRazorRuntimeCompilation();
             }
-            services.Configure<RazorViewEngineOptions>(options =>
+            else
             {
-                options.FileProviders.Add(updateableFileProvider);
+                mvcBuilder.AddRazorRuntimeCompilation();
+            }
+
+            services.Configure<MvcRazorRuntimeCompilationOptions>(options =>
+            {
+                options.FileProviders.Add(new UpdateableFileProvider());
             });
 
             return services;

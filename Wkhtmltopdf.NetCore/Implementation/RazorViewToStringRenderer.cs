@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Options;
 using System;
 using System.IO;
 using System.Linq;
@@ -16,16 +17,16 @@ namespace Wkhtmltopdf.NetCore
 {
     public class RazorViewToStringRenderer : IRazorViewToStringRenderer
     {
-        private IRazorViewEngine _viewEngine;
-        private ITempDataProvider _tempDataProvider;
-        private IServiceProvider _serviceProvider;
+        private readonly IOptions<MvcViewOptions> _options;
+        private readonly ITempDataProvider _tempDataProvider;
+        private readonly IServiceProvider _serviceProvider;
 
         public RazorViewToStringRenderer(
-            IRazorViewEngine viewEngine,
+            IOptions<MvcViewOptions> options,
             ITempDataProvider tempDataProvider,
             IServiceProvider serviceProvider)
         {
-            _viewEngine = viewEngine;
+            _options = options;
             _tempDataProvider = tempDataProvider;
             _serviceProvider = serviceProvider;
         }
@@ -35,25 +36,22 @@ namespace Wkhtmltopdf.NetCore
             var actionContext = GetActionContext();
             var view = FindView(actionContext, viewName);
 
+            var viewData = new ViewDataDictionary<TModel>(new EmptyModelMetadataProvider(), new ModelStateDictionary())
+            {
+                Model = model
+            };
+
             using (var output = new StringWriter())
             {
                 var viewContext = new ViewContext(
                     actionContext,
                     view,
-                    new ViewDataDictionary<TModel>(
-                        metadataProvider: new EmptyModelMetadataProvider(),
-                        modelState: new ModelStateDictionary())
-                    {
-                        Model = model
-                    },
-                    new TempDataDictionary(
-                        actionContext.HttpContext,
-                        _tempDataProvider),
+                    viewData,
+                    new TempDataDictionary(actionContext.HttpContext, _tempDataProvider),
                     output,
-                    new HtmlHelperOptions());
-
+                    new HtmlHelperOptions()
+                );
                 await view.RenderAsync(viewContext);
-
                 return output.ToString();
             }
         }
@@ -66,13 +64,15 @@ namespace Wkhtmltopdf.NetCore
 
         private IView FindView(ActionContext actionContext, string viewName)
         {
-            var getViewResult = _viewEngine.GetView(executingFilePath: null, viewPath: viewName, isMainPage: true);
+            var viewEngine = _options.Value.ViewEngines[0] as IRazorViewEngine;
+
+            var getViewResult = viewEngine.GetView(executingFilePath: null, viewPath: viewName, isMainPage: true);
             if (getViewResult.Success)
             {
                 return getViewResult.View;
             }
 
-            var findViewResult = _viewEngine.FindView(actionContext, viewName, isMainPage: true);
+            var findViewResult = viewEngine.FindView(actionContext, viewName, isMainPage: true);
             if (findViewResult.Success)
             {
                 return findViewResult.View;
