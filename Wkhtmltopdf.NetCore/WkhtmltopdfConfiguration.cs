@@ -1,17 +1,12 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Controllers;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Hosting.Internal;
-using Microsoft.Extensions.ObjectPool;
 using System;
-using System.Diagnostics;
 using System.IO;
-using System.Runtime.InteropServices;
 
 namespace Wkhtmltopdf.NetCore
 {
@@ -33,25 +28,14 @@ namespace Wkhtmltopdf.NetCore
                 throw new Exception("Folder containing wkhtmltopdf not found, searched for " + RotativaPath);
             }
 
+            var fileProvider = new UpdateableFileProvider();
             services.TryAddTransient<ITempDataProvider, SessionStateTempDataProvider>();
-            services.AddMvc().AddRazorRuntimeCompilation();
+            services.TryAddSingleton(fileProvider);
+            services.TryAddSingleton<IRazorViewEngine, RazorViewEngine>();
+            services.AddMvc().AddRazorRuntimeCompilation(options => options.FileProviders.Add(fileProvider))
+                .SetCompatibilityVersion(CompatibilityVersion.Latest);
             services.TryAddTransient<IRazorViewToStringRenderer, RazorViewToStringRenderer>();
             services.TryAddTransient<IGeneratePdf, GeneratePdf>();
-
-            var mvcBuilder = services.BuildServiceProvider().GetService<IMvcCoreBuilder>();
-            if (mvcBuilder == null)
-            {
-                services.AddMvc().AddRazorRuntimeCompilation();
-            }
-            else
-            {
-                mvcBuilder.AddRazorRuntimeCompilation();
-            }
-
-            services.Configure<MvcRazorRuntimeCompilationOptions>(options =>
-            {
-                options.FileProviders.Add(new UpdateableFileProvider());
-            });
 
             return services;
         }

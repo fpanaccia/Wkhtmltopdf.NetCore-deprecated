@@ -50,59 +50,61 @@ namespace Wkhtmltopdf.NetCore
                 throw new Exception("wkhtmltopdf not found, searched for " + rotativaLocation);
             }
 
-            var proc = new Process();
-            try
+            using (var proc = new Process())
             {
-                proc.StartInfo = new ProcessStartInfo
+                try
                 {
-                    FileName = rotativaLocation,
-                    Arguments = switches,
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    RedirectStandardInput = true,
-                    CreateNoWindow = true
-                };
-
-                proc.Start();
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-
-            // generate PDF from given HTML string, not from URL
-            if (!string.IsNullOrEmpty(html))
-            {
-                using (var sIn = proc.StandardInput)
-                {
-                    sIn.WriteLine(html);
-                }
-            }
-
-            using (var ms = new MemoryStream())
-            {
-                using (var sOut = proc.StandardOutput.BaseStream)
-                {
-                    byte[] buffer = new byte[4096];
-                    int read;
-
-                    while ((read = sOut.Read(buffer, 0, buffer.Length)) > 0)
+                    proc.StartInfo = new ProcessStartInfo
                     {
-                        ms.Write(buffer, 0, read);
+                        FileName = rotativaLocation,
+                        Arguments = switches,
+                        UseShellExecute = false,
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        RedirectStandardInput = true,
+                        CreateNoWindow = true
+                    };
+
+                    proc.Start();
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+
+                // generate PDF from given HTML string, not from URL
+                if (!string.IsNullOrEmpty(html))
+                {
+                    using (var sIn = proc.StandardInput)
+                    {
+                        sIn.WriteLine(html);
                     }
                 }
 
-                string error = proc.StandardError.ReadToEnd();
-
-                if (ms.Length == 0)
+                using (var ms = new MemoryStream())
                 {
-                    throw new Exception(error);
+                    using (var sOut = proc.StandardOutput.BaseStream)
+                    {
+                        byte[] buffer = new byte[4096];
+                        int read;
+
+                        while ((read = sOut.Read(buffer, 0, buffer.Length)) > 0)
+                        {
+                            ms.Write(buffer, 0, read);
+                        }
+                    }
+
+                    string error = proc.StandardError.ReadToEnd();
+
+                    if (ms.Length == 0)
+                    {
+                        throw new Exception(error);
+                    }
+
+                    proc.WaitForExit();
+
+                    return ms.ToArray();
                 }
-
-                proc.WaitForExit();
-
-                return ms.ToArray();
             }
         }
 
