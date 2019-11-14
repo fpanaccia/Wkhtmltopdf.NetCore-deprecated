@@ -32,5 +32,23 @@ For more information about how to use it, go to https://github.com/fpanaccia/Wkh
     <None Update="build\netcoreapp3.0\Wkhtmltopdf.NetCore.targets">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="runtimes\mac\libwkhtmltox.dylib">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="runtimes\mac\wkhtmltopdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="runtimes\unix\libwkhtmltox.so">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="runtimes\unix\wkhtmltopdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="runtimes\win\wkhtmltopdf.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="runtimes\win\wkhtmltox.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>
