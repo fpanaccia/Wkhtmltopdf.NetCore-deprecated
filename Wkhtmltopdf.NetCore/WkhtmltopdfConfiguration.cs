@@ -12,20 +12,20 @@ namespace Wkhtmltopdf.NetCore
 {
     public static class WkhtmltopdfConfiguration
     {
-        public static string RotativaPath { get; set; }
+        public static string RuntimePath { get; set; }
 
         /// <summary>
-        /// Setup Rotativa library
+        /// Setup Runtime library
         /// </summary>
         /// <param name="services">The IServiceCollection object</param>
-        /// <param name="wkhtmltopdfRelativePath">Optional. Relative path to the directory containing wkhtmltopdf. Default is "Rotativa". Download at https://wkhtmltopdf.org/downloads.html</param>
-        public static IServiceCollection AddWkhtmltopdf(this IServiceCollection services, string wkhtmltopdfRelativePath = "Rotativa")
+        /// <param name="wkhtmltopdfRuntimePath">Optional. Relative path to the directory containing wkhtmltopdf. Default is "runtimes". Download at https://wkhtmltopdf.org/downloads.html</param>
+        public static IServiceCollection AddWkhtmltopdf(this IServiceCollection services, string wkhtmltopdfRuntimePath = "runtimes")
         {
-            RotativaPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, wkhtmltopdfRelativePath);
+            RuntimePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, wkhtmltopdfRuntimePath);
 
-            if (!Directory.Exists(RotativaPath))
+            if (!Directory.Exists(RuntimePath))
             {
-                throw new Exception("Folder containing wkhtmltopdf not found, searched for " + RotativaPath);
+                throw new Exception("Folder containing wkhtmltopdf not found, searched for " + RuntimePath);
             }
 
             var fileProvider = new UpdateableFileProvider();

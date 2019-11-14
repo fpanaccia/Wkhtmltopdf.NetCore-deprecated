@@ -30,24 +30,24 @@ namespace Wkhtmltopdf.NetCore
                 html = SpecialCharsEncode(html);
             }
 
-            string rotativaLocation;
+            string runtimeLocation;
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                rotativaLocation = Path.Combine(wkhtmlPath, "Windows", "wkhtmltopdf.exe");
+                runtimeLocation = Path.Combine(wkhtmlPath, "win", "wkhtmltopdf.exe");
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                rotativaLocation = Path.Combine(wkhtmlPath, "Mac", "wkhtmltopdf");
+                runtimeLocation = Path.Combine(wkhtmlPath, "mac", "wkhtmltopdf");
             }
             else
             {
-                rotativaLocation = Path.Combine(wkhtmlPath, "Linux", "wkhtmltopdf");
+                runtimeLocation = Path.Combine(wkhtmlPath, "unix", "wkhtmltopdf");
             }
 
-            if (!File.Exists(rotativaLocation))
+            if (!File.Exists(runtimeLocation))
             {
-                throw new Exception("wkhtmltopdf not found, searched for " + rotativaLocation);
+                throw new Exception("wkhtmltopdf not found, searched for " + runtimeLocation);
             }
 
             using (var proc = new Process())
@@ -56,7 +56,7 @@ namespace Wkhtmltopdf.NetCore
                 {
                     proc.StartInfo = new ProcessStartInfo
                     {
-                        FileName = rotativaLocation,
+                        FileName = runtimeLocation,
                         Arguments = switches,
                         UseShellExecute = false,
                         RedirectStandardOutput = true,

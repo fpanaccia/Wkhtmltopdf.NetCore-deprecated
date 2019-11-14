@@ -7,7 +7,8 @@ namespace Wkhtmltopdf.NetCore
 {
     public class GeneratePdf : AsPdfResultBase, IGeneratePdf
     {
-        readonly IRazorViewToStringRenderer _engine;
+        private readonly IRazorViewToStringRenderer _engine;
+
         public GeneratePdf(IRazorViewToStringRenderer engine)
         {
             _engine = engine;
@@ -15,14 +16,13 @@ namespace Wkhtmltopdf.NetCore
 
         public byte[] GetPDF(string html)
         {
-            return WkhtmlDriver.Convert(WkhtmltopdfConfiguration.RotativaPath, this.GetConvertOptions(), html);
+            return WkhtmlDriver.Convert(WkhtmltopdfConfiguration.RuntimePath, this.GetConvertOptions(), html);
         }
 
         public async Task<byte[]> GetByteArray<T>(string View, T model)
         {
             try
             {
-                
                 var html = await _engine.RenderViewToStringAsync(View, model);
                 return GetPDF(html);
             }
