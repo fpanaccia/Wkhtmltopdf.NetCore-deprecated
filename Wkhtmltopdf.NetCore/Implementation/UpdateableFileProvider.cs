@@ -7,8 +7,6 @@ namespace Wkhtmltopdf.NetCore
 {
     public class UpdateableFileProvider : IFileProvider
     {
-        public CancellationTokenSource _pagesTokenSource = new CancellationTokenSource();
-
         public static Dictionary<string, ViewFileInfo> Views = new Dictionary<string, ViewFileInfo>()
         {
             {
@@ -33,13 +31,6 @@ namespace Wkhtmltopdf.NetCore
             }
         }
 
-        public void CancelRazorPages()
-        {
-            var oldToken = _pagesTokenSource;
-            _pagesTokenSource = new CancellationTokenSource();
-            oldToken.Cancel();
-        }
-
         public IFileInfo GetFileInfo(string subpath)
         {
             var viewPath = string.IsNullOrWhiteSpace(subpath) ? "/Views/FakeView.cshtml" : subpath;
@@ -53,11 +44,6 @@ namespace Wkhtmltopdf.NetCore
 
         public IChangeToken Watch(string filter)
         {
-            if (filter == "/Pages/**/*.cshtml")
-            {
-                return new CancellationChangeToken(_pagesTokenSource.Token);
-            }
-
             if (Views.TryGetValue(filter, out var fileInfo))
             {
                 return fileInfo.ChangeToken;
