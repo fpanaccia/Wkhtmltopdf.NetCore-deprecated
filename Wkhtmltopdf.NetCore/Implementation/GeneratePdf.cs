@@ -5,12 +5,17 @@ using System.Threading.Tasks;
 
 namespace Wkhtmltopdf.NetCore
 {
-    public class GeneratePdf : AsPdfResultBase, IGeneratePdf
+    public class GeneratePdf : ConvertOptions, IGeneratePdf
     {
         readonly IRazorViewToStringRenderer _engine;
         public GeneratePdf(IRazorViewToStringRenderer engine)
         {
             _engine = engine;
+        }
+
+        public void SetConvertOptions(ConvertOptions options)
+        {
+            this.SetOptions(options);
         }
 
         public byte[] GetPDF(string html)

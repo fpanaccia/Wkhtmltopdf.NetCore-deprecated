@@ -6,12 +6,30 @@ using System.Text;
 
 namespace Wkhtmltopdf.NetCore
 {
-    public abstract class AsPdfResultBase
+    public class ConvertOptions
     {
-        protected AsPdfResultBase()
+        public ConvertOptions()
         {
             this.PageMargins = new Margins();
         }
+
+        protected void SetOptions(ConvertOptions options)
+        {
+            this.PageMargins = new Margins();
+            this.PageSize = options.PageSize;
+            this.PageWidth = options.PageWidth;
+            this.PageHeight = options.PageHeight;
+            this.PageOrientation = options.PageOrientation;
+            this.PageMargins = options.PageMargins;
+            this.IsLowQuality = options.IsLowQuality;
+            this.Copies = options.Copies;
+            this.IsGrayScale = options.IsGrayScale;
+            this.HeaderHtml = options.HeaderHtml;
+            this.HeaderSpacing = options.HeaderSpacing;
+            this.FooterHtml = options.FooterHtml;
+            this.FooterSpacing = options.FooterSpacing;
+        }
+
         /// <summary>
         /// Sets the page size.
         /// </summary>
