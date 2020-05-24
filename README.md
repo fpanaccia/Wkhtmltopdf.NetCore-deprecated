@@ -7,7 +7,7 @@ This project implements the library wkhtmltopdf for asp net core, working in Win
 
 For more information about how to use it, go to https://github.com/fpanaccia/Wkhtmltopdf.NetCore.Example
 
-# But i dont want too see another repository
+# But i don't want to see another repository
 
 You will need to put this files with this following structure, this need to be done because nuget cant copy those files, only puts a link with the full path and will only work on your computer.
 
@@ -29,14 +29,14 @@ Those files will need to be included in your project with the propierty "Copy Al
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+        {            
+            services.AddControllers();
             services.AddWkhtmltopdf();
         }
         
 If you are using the docker container for net core provided from microsoft, you need to add this line to the dockerfile "RUN apt-get update -qq && apt-get -y install libgdiplus libc6-dev", like this
 
-        FROM microsoft/dotnet:2.1-aspnetcore-runtime AS base
+        FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-buster-slim AS base
         WORKDIR /app
         RUN apt-get update -qq && apt-get -y install libgdiplus libc6-dev
         EXPOSE 80
