@@ -28,6 +28,7 @@ namespace Wkhtmltopdf.NetCore
             this.HeaderSpacing = options.HeaderSpacing;
             this.FooterHtml = options.FooterHtml;
             this.FooterSpacing = options.FooterSpacing;
+            this.Replacements = options.Replacements;
         }
 
         /// <summary>
@@ -107,6 +108,13 @@ namespace Wkhtmltopdf.NetCore
         /// </summary>
         [OptionFlag("--footer-spacing")]
         public int? FooterSpacing { get; set; }
+
+        /// <summary>
+        /// Sets the variables to replace in the header and footer html
+        /// </summary>
+        /// <remarks>Replaces [name] with value in header and footer (repeatable).</remarks>
+        [OptionFlag("--replace")]
+        public Dictionary<string, string> Replacements { get; set; }
 
         protected string GetConvertOptions()
         {
