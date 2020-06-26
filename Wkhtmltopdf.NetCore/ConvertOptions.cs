@@ -149,7 +149,7 @@ namespace Wkhtmltopdf.NetCore
                     var dictionary = (Dictionary<string, string>)value;
                     foreach (var d in dictionary)
                     {
-                        result.AppendFormat(" {0} {1} {2}", of.Name, d.Key, d.Value);
+                        result.AppendFormat(" {0} \"{1}\" \"{2}\"", of.Name, d.Key, d.Value);
                     }
                 }
                 else if (fi.PropertyType == typeof(bool))
