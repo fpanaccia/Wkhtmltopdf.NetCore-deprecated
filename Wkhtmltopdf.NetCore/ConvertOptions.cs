@@ -28,6 +28,7 @@ namespace Wkhtmltopdf.NetCore
             this.HeaderSpacing = options.HeaderSpacing;
             this.FooterHtml = options.FooterHtml;
             this.FooterSpacing = options.FooterSpacing;
+            this.Replacements = options.Replacements;
         }
 
         /// <summary>
@@ -108,6 +109,13 @@ namespace Wkhtmltopdf.NetCore
         [OptionFlag("--footer-spacing")]
         public int? FooterSpacing { get; set; }
 
+        /// <summary>
+        /// Sets the variables to replace in the header and footer html
+        /// </summary>
+        /// <remarks>Replaces [name] with value in header and footer (repeatable).</remarks>
+        [OptionFlag("--replace")]
+        public Dictionary<string, string> Replacements { get; set; }
+
         protected string GetConvertOptions()
         {
             var result = new StringBuilder();
@@ -141,7 +149,7 @@ namespace Wkhtmltopdf.NetCore
                     var dictionary = (Dictionary<string, string>)value;
                     foreach (var d in dictionary)
                     {
-                        result.AppendFormat(" {0} {1} {2}", of.Name, d.Key, d.Value);
+                        result.AppendFormat(" {0} \"{1}\" \"{2}\"", of.Name, d.Key, d.Value);
                     }
                 }
                 else if (fi.PropertyType == typeof(bool))
