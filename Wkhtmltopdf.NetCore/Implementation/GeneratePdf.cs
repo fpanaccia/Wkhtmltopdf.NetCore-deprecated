@@ -5,29 +5,31 @@ using System.Threading.Tasks;
 
 namespace Wkhtmltopdf.NetCore
 {
-    public class GeneratePdf : ConvertOptions, IGeneratePdf
+    public class GeneratePdf : IGeneratePdf
     {
+        protected ConvertOptions _convertOptions;
         readonly IRazorViewToStringRenderer _engine;
         public GeneratePdf(IRazorViewToStringRenderer engine)
         {
             _engine = engine;
+            _convertOptions = new ConvertOptions();
         }
 
         public void SetConvertOptions(ConvertOptions options)
         {
-            this.SetOptions(options);
+            this._convertOptions = options;
         }
 
         public byte[] GetPDF(string html)
         {
-            return WkhtmlDriver.Convert(WkhtmltopdfConfiguration.RotativaPath, this.GetConvertOptions(), html);
+            return WkhtmlDriver.Convert(WkhtmltopdfConfiguration.RotativaPath, this._convertOptions.GetConvertOptions(), html);
         }
 
         public async Task<byte[]> GetByteArray<T>(string View, T model)
         {
             try
             {
-                
+
                 var html = await _engine.RenderViewToStringAsync(View, model);
                 return GetPDF(html);
             }
