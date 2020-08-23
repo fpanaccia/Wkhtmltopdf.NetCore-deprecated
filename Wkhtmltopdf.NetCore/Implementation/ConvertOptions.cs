@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using Wkhtmltopdf.NetCore.Interfaces;
 
 namespace Wkhtmltopdf.NetCore
 {
-    public class ConvertOptions
+    public class ConvertOptions : IConvertOptions
     {
         public ConvertOptions()
         {
@@ -43,6 +44,12 @@ namespace Wkhtmltopdf.NetCore
         /// Sets the page margins.
         /// </summary>
         public Margins PageMargins { get; set; }
+
+        /// <summary>
+        /// Indicates whether the PDF should be generated with forms.
+        /// </summary>
+        [OptionFlag("--enable-forms")]
+        public bool EnableForms { get; set; }
 
         protected string GetContentType()
         {

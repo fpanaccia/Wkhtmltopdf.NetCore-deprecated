@@ -31,6 +31,15 @@ namespace Wkhtmltopdf.NetCore
             _serviceProvider = serviceProvider;
         }
 
+        public async Task<string> RenderViewToStringAsync(string viewName)
+        {
+            var actionContext = GetActionContext();
+            var view = FindView(actionContext, viewName);
+            var viewData = new ViewDataDictionary(new EmptyModelMetadataProvider(), new ModelStateDictionary());
+
+            return await RenderViewAsync(actionContext, viewData, view);
+        }
+
         public async Task<string> RenderViewToStringAsync<TModel>(string viewName, TModel model)
         {
             var actionContext = GetActionContext();
@@ -41,6 +50,11 @@ namespace Wkhtmltopdf.NetCore
                 Model = model
             };
 
+            return await RenderViewAsync(actionContext, viewData, view);
+        }
+
+        public async Task<string> RenderViewAsync(ActionContext actionContext, ViewDataDictionary viewData, IView view)
+        {
             using (var output = new StringWriter())
             {
                 var viewContext = new ViewContext(
@@ -54,6 +68,12 @@ namespace Wkhtmltopdf.NetCore
                 await view.RenderAsync(viewContext);
                 return output.ToString();
             }
+        }
+
+        public async Task<string> RenderHtmlToStringAsync(string html)
+        {
+            UpdateableFileProvider.UpdateContent(html);
+            return await RenderViewToStringAsync("/Views/FakeView.cshtml");
         }
 
         public async Task<string> RenderHtmlToStringAsync<TModel>(string html, TModel model)
