@@ -2,14 +2,14 @@
 
   <PropertyGroup>
     <TargetFrameworks>netcoreapp3.0</TargetFrameworks>
-    <AssemblyVersion>3.0.1.0</AssemblyVersion>
-    <FileVersion>3.0.1.0</FileVersion>
-    <Version>3.0.1</Version>
+    <AssemblyVersion>3.0.2.0</AssemblyVersion>
+    <FileVersion>3.0.2.0</FileVersion>
+    <Version>3.0.2</Version>
     <Description>This project implements the library wkhtmltopdf for asp net core and a view engine, working in windows, macos, linux and docker.
 
 For more information about how to use it, go to https://github.com/fpanaccia/Wkhtmltopdf.NetCore.Example</Description>
     <RepositoryUrl>https://github.com/fpanaccia/Wkhtmltopdf.NetCore</RepositoryUrl>
-    <PackageReleaseNotes>Add replacements</PackageReleaseNotes>
+    <PackageReleaseNotes>improvements in options + new generations methods</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
