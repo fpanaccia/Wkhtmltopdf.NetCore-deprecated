@@ -13,24 +13,6 @@ namespace Wkhtmltopdf.NetCore
             this.PageMargins = new Margins();
         }
 
-        protected void SetOptions(ConvertOptions options)
-        {
-            this.PageMargins = new Margins();
-            this.PageSize = options.PageSize;
-            this.PageWidth = options.PageWidth;
-            this.PageHeight = options.PageHeight;
-            this.PageOrientation = options.PageOrientation;
-            this.PageMargins = options.PageMargins;
-            this.IsLowQuality = options.IsLowQuality;
-            this.Copies = options.Copies;
-            this.IsGrayScale = options.IsGrayScale;
-            this.HeaderHtml = options.HeaderHtml;
-            this.HeaderSpacing = options.HeaderSpacing;
-            this.FooterHtml = options.FooterHtml;
-            this.FooterSpacing = options.FooterSpacing;
-            this.Replacements = options.Replacements;
-        }
-
         /// <summary>
         /// Sets the page size.
         /// </summary>
@@ -116,7 +98,7 @@ namespace Wkhtmltopdf.NetCore
         [OptionFlag("--replace")]
         public Dictionary<string, string> Replacements { get; set; }
 
-        protected string GetConvertOptions()
+        public string GetConvertOptions()
         {
             var result = new StringBuilder();
 

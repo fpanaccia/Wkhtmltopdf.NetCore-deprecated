@@ -2,7 +2,7 @@
 
 namespace Wkhtmltopdf.NetCore.Options
 {
-    class OptionFlag : Attribute
+    public class OptionFlag : Attribute
     {
         public string Name { get; private set; }
 
