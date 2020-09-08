@@ -95,7 +95,8 @@ namespace Wkhtmltopdf.NetCore.Test.Options
                 Test1 = nameof(CustomConvertOptions.Test1),
                 Test2 = true,
                 Ignored1 = "Ignored",
-                Ignored2 = "Ignored"
+                Ignored2 = "Ignored",
+                Ignored3 = "Ignored"
             };
 
             var result = options.GetConvertOptions();
@@ -111,7 +112,8 @@ namespace Wkhtmltopdf.NetCore.Test.Options
             [OptionFlag("-t1")] public string Test1 { get; set; }
             [OptionFlag("-t2")] public bool Test2 { get; set; }
             [OptionFlag("-ignr")] public string Ignored1;
-            public string Ignored2;
+            public string Ignored2 { get; set; }
+            public string Ignored3;
         }
     }
 }
