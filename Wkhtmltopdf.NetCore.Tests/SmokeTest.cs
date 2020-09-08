@@ -16,7 +16,7 @@ namespace Gemini.Wkhtmltopdf.NetCore
         {
             WkhtmltopdfConfiguration.RotativaPath = AppDomain.CurrentDomain.BaseDirectory + "Rotativa";
             var generatePdf = new GeneratePdf(null);
-            var bytes = generatePdf.GetPDF("<p><h1>Hello World</h1>This is html rendered text</p>");
+            generatePdf.GetPDF("<p><h1>Hello World</h1>This is html rendered text</p>");
         }
     }
 }

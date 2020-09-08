@@ -7,6 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wkhtmltopdf.NetCore", "Wkht
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wkhtmltopdf.NetCore.Tests", "Wkhtmltopdf.NetCore.Tests\Wkhtmltopdf.NetCore.Tests.csproj", "{260E95DE-18A6-474B-9B4B-7A7F04D97378}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{7E8E2B27-FA2B-4267-93CB-4A0742C3280E}"
+ProjectSection(SolutionItems) = preProject
+	README.md = README.md
+EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
