@@ -52,25 +52,18 @@ namespace Wkhtmltopdf.NetCore
 
             using (var proc = new Process())
             {
-                try
+                proc.StartInfo = new ProcessStartInfo
                 {
-                    proc.StartInfo = new ProcessStartInfo
-                    {
-                        FileName = rotativaLocation,
-                        Arguments = switches,
-                        UseShellExecute = false,
-                        RedirectStandardOutput = true,
-                        RedirectStandardError = true,
-                        RedirectStandardInput = true,
-                        CreateNoWindow = true
-                    };
+                    FileName = rotativaLocation,
+                    Arguments = switches,
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    RedirectStandardInput = true,
+                    CreateNoWindow = true
+                };
 
-                    proc.Start();
-                }
-                catch (Exception ex)
-                {
-                    throw ex;
-                }
+                proc.Start();
 
                 // generate PDF from given HTML string, not from URL
                 if (!string.IsNullOrEmpty(html))
