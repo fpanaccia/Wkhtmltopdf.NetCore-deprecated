@@ -109,9 +109,7 @@ namespace Wkhtmltopdf.NetCore
         {
             var result = new StringBuilder();
 
-            if (PageMargins != null)
-                result.Append(PageMargins);
-
+            result.Append(PageMargins);
             result.Append(" ");
             result.Append(GetConvertBaseOptions());
 
