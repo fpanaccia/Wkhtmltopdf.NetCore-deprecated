@@ -25,18 +25,18 @@ namespace Wkhtmltopdf.NetCore.Test.Options
             var counter = 0;
             IConvertOptions options = new ConvertOptions
             {
-                Copies = AddWithFormat(counter++, "--copies {0}"),
+                Copies = AddWithFormat(++counter, "--copies {0}"),
                 EnableForms = AddWithValue(true, "--enable-forms"),
                 FooterHtml = AddWithFormat(nameof(ConvertOptions.FooterHtml), "--footer-html {0}"),
-                FooterSpacing = AddWithFormat(counter++, "--footer-spacing {0}"),
+                FooterSpacing = AddWithFormat(++counter, "--footer-spacing {0}"),
                 HeaderHtml = AddWithFormat(nameof(ConvertOptions.HeaderHtml), "--header-html {0}"),
-                HeaderSpacing = AddWithFormat(counter++, "--header-spacing {0}"),
-                PageHeight = AddWithFormat(counter++ + 0.5, "--page-height {0}"),
+                HeaderSpacing = AddWithFormat(++counter, "--header-spacing {0}"),
+                PageHeight = AddWithFormat(++counter + 0.5, "--page-height {0}"),
                 PageMargins = AddWithValues(new Margins(1, 2, 3, 4),
                     new[] {"-B 3", "-L 4", "-R 2", "-T 1"}),
                 PageOrientation = AddWithFormat(Orientation.Landscape, "-O {0}"),
                 PageSize = AddWithFormat(Size.Legal, "-s {0}"),
-                PageWidth = AddWithFormat(counter++ + 0.5, "--page-width {0}"),
+                PageWidth = AddWithFormat(++counter + 0.5, "--page-width {0}"),
                 IsGrayScale = AddWithValue(true, "-g"),
                 IsLowQuality = AddWithValue(true, "-l"),
                 Replacements = AddWithValues(new Dictionary<string, string>
