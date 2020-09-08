@@ -108,14 +108,14 @@ namespace Wkhtmltopdf.NetCore
             throw new InvalidOperationException(errorMessage);
         }
 
-        public void AddView(string path, string viewHTML)
+        public void AddView(string path, string viewHtml)
         {
             if (ExistsView(path))
             {
                 throw new Exception($"View {path} already exists");
             }
 
-            UpdateableFileProvider.Views.Add($"/Views/{path}.cshtml", new ViewFileInfo(viewHTML));
+            UpdateableFileProvider.Views.Add($"/Views/{path}.cshtml", new ViewFileInfo(viewHtml));
         }
 
         public bool ExistsView(string path)
@@ -123,11 +123,11 @@ namespace Wkhtmltopdf.NetCore
             return UpdateableFileProvider.Views.Any(x => x.Key == $"/Views/{path}.cshtml");
         }
 
-        public void UpdateView(string path, string viewHTML)
+        public void UpdateView(string path, string viewHtml)
         {
             if (ExistsView(path))
             {
-                UpdateableFileProvider.UpdateContent(viewHTML, $"/Views/{path}.cshtml");
+                UpdateableFileProvider.UpdateContent(viewHtml, $"/Views/{path}.cshtml");
             }
             else
             {
