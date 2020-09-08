@@ -8,7 +8,7 @@ using Wkhtmltopdf.NetCore.Options;
 
 namespace Wkhtmltopdf.NetCore.Test.Options
 {
-    public class ConvertOptionsTest
+    public class ConvertOptionsTests
     {
         [Test]
         public void ConvertsEmpty()

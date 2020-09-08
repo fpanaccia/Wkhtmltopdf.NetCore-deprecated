@@ -3,7 +3,7 @@ using Wkhtmltopdf.NetCore.Options;
 
 namespace Wkhtmltopdf.NetCore.Test.Options
 {
-    public class MarginsTest
+    public class MarginsTests
     {
         [TestCase("-B 1 -L 2 -R 3 -T 4", 1,2,3,4)]
         [TestCase("-B 1 -L 2 -R 3", 1,2,3,null)]
