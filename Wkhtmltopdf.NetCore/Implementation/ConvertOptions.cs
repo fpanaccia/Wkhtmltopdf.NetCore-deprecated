@@ -121,17 +121,17 @@ namespace Wkhtmltopdf.NetCore
             var result = new StringBuilder();
 
             var properties = GetType().GetProperties();
-            foreach (var fi in properties)
+            foreach (var pi in properties)
             {
-                var of = fi.GetCustomAttributes(typeof(OptionFlag), true).FirstOrDefault() as OptionFlag;
+                var of = pi.GetCustomAttributes(typeof(OptionFlag), true).FirstOrDefault() as OptionFlag;
                 if (of == null)
                     continue;
 
-                object value = fi.GetValue(this, null);
+                object value = pi.GetValue(this, null);
                 if (value == null)
                     continue;
 
-                if (fi.PropertyType == typeof(Dictionary<string, string>))
+                if (pi.PropertyType == typeof(Dictionary<string, string>))
                 {
                     var dictionary = (Dictionary<string, string>)value;
                     foreach (var d in dictionary)
@@ -139,7 +139,7 @@ namespace Wkhtmltopdf.NetCore
                         result.AppendFormat(" {0} \"{1}\" \"{2}\"", of.Name, d.Key, d.Value);
                     }
                 }
-                else if (fi.PropertyType == typeof(bool))
+                else if (pi.PropertyType == typeof(bool))
                 {
                     if ((bool)value)
                         result.AppendFormat(CultureInfo.InvariantCulture, " {0}", of.Name);
