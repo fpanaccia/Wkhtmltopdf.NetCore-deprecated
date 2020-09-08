@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -103,6 +104,8 @@ namespace Wkhtmltopdf.NetCore.Test.Options
             StringAssert.Contains($"-t2", result);
         }
 
+        [SuppressMessage("ReSharper", "NotAccessedField.Local")]
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Local")]
         private class CustomConvertOptions : ConvertOptions
         {
             [OptionFlag("-t1")] public string Test1 { get; set; }
