@@ -122,8 +122,8 @@ namespace Wkhtmltopdf.NetCore
         {
             var result = new StringBuilder();
 
-            var fields = GetType().GetProperties();
-            foreach (var fi in fields)
+            var properties = GetType().GetProperties();
+            foreach (var fi in properties)
             {
                 var of = fi.GetCustomAttributes(typeof(OptionFlag), true).FirstOrDefault() as OptionFlag;
                 if (of == null)

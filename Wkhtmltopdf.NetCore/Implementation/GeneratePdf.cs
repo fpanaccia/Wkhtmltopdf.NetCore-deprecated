@@ -1,14 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.IO;
+﻿using System.IO;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Wkhtmltopdf.NetCore.Interfaces;
 
 namespace Wkhtmltopdf.NetCore
 {
     public class GeneratePdf : IGeneratePdf
     {
-        private IConvertOptions _convertOptions;
         private readonly IRazorViewToStringRenderer _engine;
+        private IConvertOptions _convertOptions;
 
         public GeneratePdf(IRazorViewToStringRenderer engine)
         {
@@ -23,7 +23,8 @@ namespace Wkhtmltopdf.NetCore
 
         public byte[] GetPDF(string html)
         {
-            return WkhtmlDriver.Convert(WkhtmltopdfConfiguration.RotativaPath, _convertOptions.GetConvertOptions(), html);
+            return WkhtmlDriver.Convert(WkhtmltopdfConfiguration.RotativaPath, _convertOptions.GetConvertOptions(),
+                html);
         }
 
         public async Task<byte[]> GetByteArray<T>(string view, T model)
@@ -36,7 +37,7 @@ namespace Wkhtmltopdf.NetCore
         {
             var html = await _engine.RenderViewToStringAsync(view, model);
             var byteArray = GetPDF(html);
-            MemoryStream pdfStream = new MemoryStream();
+            var pdfStream = new MemoryStream();
             pdfStream.Write(byteArray, 0, byteArray.Length);
             pdfStream.Position = 0;
             return new FileStreamResult(pdfStream, "application/pdf");
@@ -46,7 +47,7 @@ namespace Wkhtmltopdf.NetCore
         {
             var html = await _engine.RenderHtmlToStringAsync(viewInHtml, model);
             var byteArray = GetPDF(html);
-            MemoryStream pdfStream = new MemoryStream();
+            var pdfStream = new MemoryStream();
             pdfStream.Write(byteArray, 0, byteArray.Length);
             pdfStream.Position = 0;
             return new FileStreamResult(pdfStream, "application/pdf");
@@ -68,7 +69,7 @@ namespace Wkhtmltopdf.NetCore
         {
             var html = await _engine.RenderHtmlToStringAsync(viewInHtml);
             var byteArray = GetPDF(html);
-            MemoryStream pdfStream = new MemoryStream();
+            var pdfStream = new MemoryStream();
             pdfStream.Write(byteArray, 0, byteArray.Length);
             pdfStream.Position = 0;
             return new FileStreamResult(pdfStream, "application/pdf");
@@ -84,7 +85,7 @@ namespace Wkhtmltopdf.NetCore
         {
             var html = await _engine.RenderViewToStringAsync(view);
             var byteArray = GetPDF(html);
-            MemoryStream pdfStream = new MemoryStream();
+            var pdfStream = new MemoryStream();
             pdfStream.Write(byteArray, 0, byteArray.Length);
             pdfStream.Position = 0;
             return new FileStreamResult(pdfStream, "application/pdf");
