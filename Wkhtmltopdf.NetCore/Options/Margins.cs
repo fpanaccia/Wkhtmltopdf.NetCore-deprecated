@@ -53,7 +53,7 @@ namespace Wkhtmltopdf.NetCore.Options
             FieldInfo[] fields = GetType().GetFields();
             foreach (FieldInfo fi in fields)
             {
-                var of = fi.GetCustomAttributes(typeof(OptionFlag), true).FirstOrDefault() as OptionFlag;
+                var of = fi.GetCustomAttributes(typeof(OptionFlagAttribute), true).FirstOrDefault() as OptionFlagAttribute;
                 if (of == null)
                     continue;
 

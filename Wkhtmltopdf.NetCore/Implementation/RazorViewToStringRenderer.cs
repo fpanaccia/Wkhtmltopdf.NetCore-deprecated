@@ -55,19 +55,17 @@ namespace Wkhtmltopdf.NetCore
 
         public async Task<string> RenderViewAsync(ActionContext actionContext, ViewDataDictionary viewData, IView view)
         {
-            using (var output = new StringWriter())
-            {
-                var viewContext = new ViewContext(
-                    actionContext,
-                    view,
-                    viewData,
-                    new TempDataDictionary(actionContext.HttpContext, _tempDataProvider),
-                    output,
-                    new HtmlHelperOptions()
-                );
-                await view.RenderAsync(viewContext);
-                return output.ToString();
-            }
+            await using var output = new StringWriter();
+            var viewContext = new ViewContext(
+                actionContext,
+                view,
+                viewData,
+                new TempDataDictionary(actionContext.HttpContext, _tempDataProvider),
+                output,
+                new HtmlHelperOptions()
+            );
+            await view.RenderAsync(viewContext);
+            return output.ToString();
         }
 
         public async Task<string> RenderHtmlToStringAsync(string html)
@@ -106,14 +104,14 @@ namespace Wkhtmltopdf.NetCore
             throw new InvalidOperationException(errorMessage);
         }
 
-        public void AddView(string path, string viewHTML)
+        public void AddView(string path, string viewHtml)
         {
             if (ExistsView(path))
             {
                 throw new Exception($"View {path} already exists");
             }
 
-            UpdateableFileProvider.Views.Add($"/Views/{path}.cshtml", new ViewFileInfo(viewHTML));
+            UpdateableFileProvider.Views.Add($"/Views/{path}.cshtml", new ViewFileInfo(viewHtml));
         }
 
         public bool ExistsView(string path)
@@ -121,11 +119,11 @@ namespace Wkhtmltopdf.NetCore
             return UpdateableFileProvider.Views.Any(x => x.Key == $"/Views/{path}.cshtml");
         }
 
-        public void UpdateView(string path, string viewHTML)
+        public void UpdateView(string path, string viewHtml)
         {
             if (ExistsView(path))
             {
-                UpdateableFileProvider.UpdateContent(viewHTML, $"/Views/{path}.cshtml");
+                UpdateableFileProvider.UpdateContent(viewHtml, $"/Views/{path}.cshtml");
             }
             else
             {

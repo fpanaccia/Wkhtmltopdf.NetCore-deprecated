@@ -7,7 +7,7 @@ namespace Wkhtmltopdf.NetCore
 {
     public class UpdateableFileProvider : IFileProvider
     {
-        public static Dictionary<string, ViewFileInfo> Views = new Dictionary<string, ViewFileInfo>()
+        public static readonly Dictionary<string, ViewFileInfo> Views = new Dictionary<string, ViewFileInfo>()
         {
             {
                 "/Views/FakeView.cshtml",
@@ -15,7 +15,7 @@ namespace Wkhtmltopdf.NetCore
             }
         };
 
-        public IDirectoryContents GetDirectoryContents(string subpath)
+        public IDirectoryContents GetDirectoryContents(string subPath)
         {
             return new NotFoundDirectoryContents();
         }
@@ -31,9 +31,9 @@ namespace Wkhtmltopdf.NetCore
             }
         }
 
-        public IFileInfo GetFileInfo(string subpath)
+        public IFileInfo GetFileInfo(string subPath)
         {
-            var viewPath = string.IsNullOrWhiteSpace(subpath) ? "/Views/FakeView.cshtml" : subpath;
+            var viewPath = string.IsNullOrWhiteSpace(subPath) ? "/Views/FakeView.cshtml" : subPath;
             if (!Views.TryGetValue(viewPath, out var fileInfo))
             {
                 fileInfo = new ViewFileInfo(null);
