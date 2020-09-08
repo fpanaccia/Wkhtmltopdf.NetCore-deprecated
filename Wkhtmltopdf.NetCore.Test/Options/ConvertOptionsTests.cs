@@ -101,8 +101,7 @@ namespace Wkhtmltopdf.NetCore.Test.Options
 
             var result = options.GetConvertOptions();
             
-            StringAssert.Contains($"-t1 {nameof(CustomConvertOptions.Test1)}", result);
-            StringAssert.Contains($"-t2", result);
+            Assert.AreEqual($"-t1 {nameof(CustomConvertOptions.Test1)} -t2", result);
         }
 
         [SuppressMessage("ReSharper", "NotAccessedField.Local")]
