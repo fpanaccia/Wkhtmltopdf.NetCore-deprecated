@@ -8,7 +8,7 @@ namespace Wkhtmltopdf.NetCore
     /// Legacy. Uses <see cref="WkhtmltopdfConfiguration.RotativaPath"/> as prefix.
     /// <para/> Appends OS depended folder and executable name.
     /// </summary>
-    public class RotativaPathAsPrefixPathProvider : IWkhtmltopdfPathProvider
+    internal class RotativaPathAsPrefixPathProvider : IWkhtmltopdfPathProvider
     {
         internal static RotativaPathAsPrefixPathProvider Default { get; } = new RotativaPathAsPrefixPathProvider();
 

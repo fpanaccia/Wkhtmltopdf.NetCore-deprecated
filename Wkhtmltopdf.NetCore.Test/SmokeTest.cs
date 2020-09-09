@@ -25,14 +25,14 @@ namespace Wkhtmltopdf.NetCore.Test
         [Test]
         public void CanConvertWithLegacyProvider()
         {
-            var generatePdf = new GeneratePdf(null, new RotativaPathAsPrefixPathProvider());
+            var generatePdf = new GeneratePdf(null, new LegacyPathProvider());
             generatePdf.GetPDF("<p><h1>Hello World</h1>This is html rendered text</p>");
         }
 
         [Test]
         public void CanConvertWithAbsoluteProvider()
         {
-            var path = new RotativaPathAsPrefixPathProvider().GetPath();
+            var path = new LegacyPathProvider().GetPath();
             var generatePdf = new GeneratePdf(null, new AbsolutePathProvider(path));
             generatePdf.GetPDF("<p><h1>Hello World</h1>This is html rendered text</p>");
         }
