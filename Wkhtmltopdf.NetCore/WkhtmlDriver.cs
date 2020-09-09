@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Wkhtmltopdf.NetCore
 {
-    public abstract class WkhtmlDriver
+    public static class WkhtmlDriver
     {
         /// <summary>
         /// Converts given URL or HTML string to PDF.
@@ -15,21 +15,9 @@ namespace Wkhtmltopdf.NetCore
         /// <param name="switches">Switches that will be passed to wkhtmltopdf binary.</param>
         /// <param name="html">String containing HTML code that should be converted to PDF.</param>
         /// <returns>PDF as byte array.</returns>
+        [Obsolete()]
         public static byte[] Convert(string wkhtmlPath, string switches, string html)
         {
-            // switches:
-            //     "-q"  - silent output, only errors - no progress messages
-            //     " -"  - switch output to stdout
-            //     "- -" - switch input to stdin and output to stdout
-            switches = "-q " + switches + " -";
-
-            // generate PDF from given HTML string, not from URL
-            if (!string.IsNullOrEmpty(html))
-            {
-                switches += " -";
-                html = SpecialCharsEncode(html);
-            }
-
             string rotativaLocation;
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -50,11 +38,36 @@ namespace Wkhtmltopdf.NetCore
                 throw new Exception("wkhtmltopdf not found, searched for " + rotativaLocation);
             }
 
+            return Convert(new AbsolutePathProvider(rotativaLocation), switches, html);
+        }
+
+        /// <summary>
+        /// Converts given URL or HTML string to PDF.
+        /// </summary>
+        /// <param name="pathProvider">Path to wkthmltopdf\wkthmltoimage.</param>
+        /// <param name="switches">Switches that will be passed to wkhtmltopdf binary.</param>
+        /// <param name="html">String containing HTML code that should be converted to PDF.</param>
+        /// <returns>PDF as byte array.</returns>
+        public static byte[] Convert(IWkhtmltopdfPathProvider pathProvider, string switches, string html)
+        {
+            // switches:
+            //     "-q"  - silent output, only errors - no progress messages
+            //     " -"  - switch output to stdout
+            //     "- -" - switch input to stdin and output to stdout
+            switches = "-q " + switches + " -";
+
+            // generate PDF from given HTML string, not from URL
+            if (!string.IsNullOrEmpty(html))
+            {
+                switches += " -";
+                html = SpecialCharsEncode(html);
+            }
+
             using (var proc = new Process())
             {
                 proc.StartInfo = new ProcessStartInfo
                 {
-                    FileName = rotativaLocation,
+                    FileName = pathProvider.GetPath(),
                     Arguments = switches,
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
@@ -100,7 +113,7 @@ namespace Wkhtmltopdf.NetCore
                 }
             }
         }
-
+              
         /// <summary>
         /// Encode all special chars
         /// </summary>
