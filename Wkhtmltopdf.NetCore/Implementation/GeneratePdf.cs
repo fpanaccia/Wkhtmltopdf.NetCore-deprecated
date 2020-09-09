@@ -14,7 +14,7 @@ namespace Wkhtmltopdf.NetCore
         public GeneratePdf(IRazorViewToStringRenderer engine, IWkhtmltopdfPathProvider pathProvider = null)
         {
             _engine = engine;
-            _pathProvider = pathProvider ?? LegacyPathProvider.Default;
+            _pathProvider = pathProvider ?? RotativaPathAsPrefixPathProvider.Default;
             _convertOptions = new ConvertOptions();
         }
 

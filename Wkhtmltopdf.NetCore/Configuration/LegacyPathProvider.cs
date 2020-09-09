@@ -4,36 +4,46 @@ using System.Runtime.InteropServices;
 
 namespace Wkhtmltopdf.NetCore
 {
+    /// <summary>
+    /// Emulates legacy registration behavior. 
+    /// </summary>
     public class LegacyPathProvider : IWkhtmltopdfPathProvider
     {
-        internal static LegacyPathProvider Default { get; } = new LegacyPathProvider();
+        private readonly string _rotativaLocation;
 
-        public string GetPath()
+        /// <summary>
+        /// Constructs path from <see cref="AppDomain.CurrentDomain"/>'s base directory, <see cref="wkhtmltopdfRelativePath"/>,
+        /// <para/>OS dependent folder and executable name.
+        /// </summary>
+        /// <param name="wkhtmltopdfRelativePath"></param>
+        public LegacyPathProvider(string wkhtmltopdfRelativePath = "Rotativa")
         {
-#pragma warning disable 612
-            var wkhtmlPath = WkhtmltopdfConfiguration.RotativaPath;
-#pragma warning restore 612
+            var wkhtmlPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, wkhtmltopdfRelativePath);
 
-            string rotativaLocation;
+            if (!Directory.Exists(wkhtmlPath))
+            {
+                throw new Exception("Folder containing wkhtmltopdf not found, searched for " + wkhtmlPath);
+            }
+            
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                rotativaLocation = Path.Combine(wkhtmlPath, "Windows", "wkhtmltopdf.exe");
+                _rotativaLocation = Path.Combine(wkhtmlPath, "Windows", "wkhtmltopdf.exe");
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                rotativaLocation = Path.Combine(wkhtmlPath, "Mac", "wkhtmltopdf");
+                _rotativaLocation = Path.Combine(wkhtmlPath, "Mac", "wkhtmltopdf");
             }
             else
             {
-                rotativaLocation = Path.Combine(wkhtmlPath, "Linux", "wkhtmltopdf");
+                _rotativaLocation = Path.Combine(wkhtmlPath, "Linux", "wkhtmltopdf");
             }
 
-            if (!File.Exists(rotativaLocation))
+            if (!File.Exists(_rotativaLocation))
             {
-                throw new Exception("wkhtmltopdf not found, searched for " + rotativaLocation);
+                throw new Exception("wkhtmltopdf not found, searched for " + _rotativaLocation);
             }
-
-            return rotativaLocation;
         }
+
+        public string GetPath() => _rotativaLocation;
     }
 }
