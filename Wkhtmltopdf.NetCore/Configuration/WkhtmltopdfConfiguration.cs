@@ -29,6 +29,11 @@ namespace Wkhtmltopdf.NetCore
             }
 #pragma warning restore 612
 
+            return AddCore(services);
+        }
+
+        private static IServiceCollection AddCore(IServiceCollection services)
+        {
             var fileProvider = new UpdateableFileProvider();
             services.TryAddTransient<ITempDataProvider, SessionStateTempDataProvider>();
             services.TryAddSingleton(fileProvider);
