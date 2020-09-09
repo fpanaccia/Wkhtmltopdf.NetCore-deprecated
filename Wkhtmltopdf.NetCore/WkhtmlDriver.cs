@@ -15,7 +15,7 @@ namespace Wkhtmltopdf.NetCore
         /// <param name="switches">Switches that will be passed to wkhtmltopdf binary.</param>
         /// <param name="html">String containing HTML code that should be converted to PDF.</param>
         /// <returns>PDF as byte array.</returns>
-        [Obsolete()]
+        [Obsolete]
         public static byte[] Convert(string wkhtmlPath, string switches, string html)
         {
             string rotativaLocation;

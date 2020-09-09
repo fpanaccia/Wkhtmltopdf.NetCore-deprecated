@@ -6,6 +6,8 @@ namespace Wkhtmltopdf.NetCore
 {
     public class LegacyPathProvider : IWkhtmltopdfPathProvider
     {
+        internal static LegacyPathProvider Default { get; } = new LegacyPathProvider();
+
         public string GetPath()
         {
 #pragma warning disable 612
