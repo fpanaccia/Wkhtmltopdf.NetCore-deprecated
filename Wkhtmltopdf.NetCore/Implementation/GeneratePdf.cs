@@ -1,15 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.IO;
+﻿using System.IO;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Wkhtmltopdf.NetCore.Interfaces;
 
 namespace Wkhtmltopdf.NetCore
 {
     public class GeneratePdf : IGeneratePdf
     {
-        protected IConvertOptions _convertOptions;
-        readonly IRazorViewToStringRenderer _engine;
+        private readonly IRazorViewToStringRenderer _engine;
+        private IConvertOptions _convertOptions;
 
         public GeneratePdf(IRazorViewToStringRenderer engine)
         {
@@ -24,105 +23,78 @@ namespace Wkhtmltopdf.NetCore
 
         public byte[] GetPDF(string html)
         {
-            return WkhtmlDriver.Convert(WkhtmltopdfConfiguration.RotativaPath, _convertOptions.GetConvertOptions(), html);
+            return WkhtmlDriver.Convert(WkhtmltopdfConfiguration.RotativaPath, _convertOptions.GetConvertOptions(),
+                html);
         }
 
-        public async Task<byte[]> GetByteArray<T>(string View, T model)
+        public async Task<byte[]> GetByteArray<T>(string view, T model)
         {
-            try
-            {
-                var html = await _engine.RenderViewToStringAsync(View, model);
-                return GetPDF(html);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            var html = await _engine.RenderViewToStringAsync(view, model);
+            return GetPDF(html);
         }
 
-        public async Task<IActionResult> GetPdf<T>(string View, T model)
+        public async Task<IActionResult> GetPdf<T>(string view, T model)
         {
-            var html = await _engine.RenderViewToStringAsync(View, model);
+            var html = await _engine.RenderViewToStringAsync(view, model);
             var byteArray = GetPDF(html);
-            MemoryStream pdfStream = new MemoryStream();
+            var pdfStream = new MemoryStream();
             pdfStream.Write(byteArray, 0, byteArray.Length);
             pdfStream.Position = 0;
             return new FileStreamResult(pdfStream, "application/pdf");
         }
 
-        public async Task<IActionResult> GetPdfViewInHtml<T>(string ViewInHtml, T model)
+        public async Task<IActionResult> GetPdfViewInHtml<T>(string viewInHtml, T model)
         {
-            var html = await _engine.RenderHtmlToStringAsync(ViewInHtml, model);
+            var html = await _engine.RenderHtmlToStringAsync(viewInHtml, model);
             var byteArray = GetPDF(html);
-            MemoryStream pdfStream = new MemoryStream();
+            var pdfStream = new MemoryStream();
             pdfStream.Write(byteArray, 0, byteArray.Length);
             pdfStream.Position = 0;
             return new FileStreamResult(pdfStream, "application/pdf");
         }
 
-        public async Task<byte[]> GetByteArrayViewInHtml<T>(string ViewInHtml, T model)
+        public async Task<byte[]> GetByteArrayViewInHtml<T>(string viewInHtml, T model)
         {
-            try
-            {
-                var view = await _engine.RenderHtmlToStringAsync(ViewInHtml, model);
-                return GetPDF(view);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            var view = await _engine.RenderHtmlToStringAsync(viewInHtml, model);
+            return GetPDF(view);
         }
 
-        public void AddView(string path, string viewHTML) => _engine.AddView(path, viewHTML);
+        public void AddView(string path, string viewHtml) => _engine.AddView(path, viewHtml);
 
         public bool ExistsView(string path) => _engine.ExistsView(path);
 
-        public void UpdateView(string path, string viewHTML) => _engine.UpdateView(path, viewHTML);
+        public void UpdateView(string path, string viewHtml) => _engine.UpdateView(path, viewHtml);
 
-        public async Task<IActionResult> GetPdfViewInHtml(string ViewInHtml)
+        public async Task<IActionResult> GetPdfViewInHtml(string viewInHtml)
         {
-            var html = await _engine.RenderHtmlToStringAsync(ViewInHtml);
+            var html = await _engine.RenderHtmlToStringAsync(viewInHtml);
             var byteArray = GetPDF(html);
-            MemoryStream pdfStream = new MemoryStream();
+            var pdfStream = new MemoryStream();
             pdfStream.Write(byteArray, 0, byteArray.Length);
             pdfStream.Position = 0;
             return new FileStreamResult(pdfStream, "application/pdf");
         }
 
-        public async Task<byte[]> GetByteArrayViewInHtml(string ViewInHtml)
+        public async Task<byte[]> GetByteArrayViewInHtml(string viewInHtml)
         {
-            try
-            {
-                var view = await _engine.RenderHtmlToStringAsync(ViewInHtml);
-                return GetPDF(view);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            var view = await _engine.RenderHtmlToStringAsync(viewInHtml);
+            return GetPDF(view);
         }
 
-        public async Task<IActionResult> GetPdf(string View)
+        public async Task<IActionResult> GetPdf(string view)
         {
-            var html = await _engine.RenderViewToStringAsync(View);
+            var html = await _engine.RenderViewToStringAsync(view);
             var byteArray = GetPDF(html);
-            MemoryStream pdfStream = new MemoryStream();
+            var pdfStream = new MemoryStream();
             pdfStream.Write(byteArray, 0, byteArray.Length);
             pdfStream.Position = 0;
             return new FileStreamResult(pdfStream, "application/pdf");
         }
 
-        public async Task<byte[]> GetByteArray(string View)
+        public async Task<byte[]> GetByteArray(string view)
         {
-            try
-            {
-                var html = await _engine.RenderViewToStringAsync(View);
-                return GetPDF(html);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            var html = await _engine.RenderViewToStringAsync(view);
+            return GetPDF(html);
         }
     }
 }

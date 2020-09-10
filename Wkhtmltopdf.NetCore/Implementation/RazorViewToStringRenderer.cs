@@ -98,22 +98,24 @@ namespace Wkhtmltopdf.NetCore
                 return findViewResult.View;
             }
 
-            var searchedLocations = getViewResult.SearchedLocations.Concat(findViewResult.SearchedLocations);
+            var searchedLocations = getViewResult.SearchedLocations
+                .Concat(findViewResult.SearchedLocations);
             var errorMessage = string.Join(
                 Environment.NewLine,
-                new[] { $"Unable to find view '{viewName}'. The following locations were searched:" }.Concat(searchedLocations)); ;
+                new[] {$"Unable to find view '{viewName}'. The following locations were searched:"}
+                    .Concat(searchedLocations));
 
             throw new InvalidOperationException(errorMessage);
         }
 
-        public void AddView(string path, string viewHTML)
+        public void AddView(string path, string viewHtml)
         {
             if (ExistsView(path))
             {
                 throw new Exception($"View {path} already exists");
             }
 
-            UpdateableFileProvider.Views.Add($"/Views/{path}.cshtml", new ViewFileInfo(viewHTML));
+            UpdateableFileProvider.Views.Add($"/Views/{path}.cshtml", new ViewFileInfo(viewHtml));
         }
 
         public bool ExistsView(string path)
@@ -121,11 +123,11 @@ namespace Wkhtmltopdf.NetCore
             return UpdateableFileProvider.Views.Any(x => x.Key == $"/Views/{path}.cshtml");
         }
 
-        public void UpdateView(string path, string viewHTML)
+        public void UpdateView(string path, string viewHtml)
         {
             if (ExistsView(path))
             {
-                UpdateableFileProvider.UpdateContent(viewHTML, $"/Views/{path}.cshtml");
+                UpdateableFileProvider.UpdateContent(viewHtml, $"/Views/{path}.cshtml");
             }
             else
             {
