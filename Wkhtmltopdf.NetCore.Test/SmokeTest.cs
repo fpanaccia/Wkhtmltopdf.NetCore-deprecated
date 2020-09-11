@@ -33,7 +33,7 @@ namespace Wkhtmltopdf.NetCore.Test
         public void CanConvertWithAbsoluteProvider()
         {
             var path = new LegacyPathProvider().GetPath();
-            var generatePdf = new GeneratePdf(null, new FixedPathProvider(path));
+            var generatePdf = new GeneratePdf(null, new FullPathProvider(path));
             generatePdf.GetPDF("<p><h1>Hello World</h1>This is html rendered text</p>");
         }
 
@@ -73,7 +73,7 @@ namespace Wkhtmltopdf.NetCore.Test
         public void ThrowsForMissingExecutable()
         {
             var path = "not_valid_path";
-            var generatePdf = new GeneratePdf(null, new FixedPathProvider(path));
+            var generatePdf = new GeneratePdf(null, new FullPathProvider(path));
 
             var ex = Assert.Throws<WkhtmlDriverException>(() => generatePdf.GetPDF(""));
             StringAssert.Contains(path, ex.Message);

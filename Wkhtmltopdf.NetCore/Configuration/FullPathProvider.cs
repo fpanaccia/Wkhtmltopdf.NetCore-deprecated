@@ -3,15 +3,15 @@
     /// <summary>
     ///     Provides absolute path to wkthmltopdf/wkthmltoimage.
     /// </summary>
-    public class FixedPathProvider : IWkhtmltopdfPathProvider
+    public class FullPathProvider : IWkhtmltopdfPathProvider
     {
         private readonly string _path;
 
         /// <summary>
-        ///     Constructs <see cref="FixedPathProvider" />. Uses provided path unchanged.
+        ///     Constructs <see cref="FullPathProvider" />. Uses provided path as is.
         /// </summary>
         /// <param name="path">Path to wkthmltopdf/wkthmltoimage.</param>
-        public FixedPathProvider(string path = "wkhtmltopdf")
+        public FullPathProvider(string path = "wkhtmltopdf")
         {
             _path = path;
         }
