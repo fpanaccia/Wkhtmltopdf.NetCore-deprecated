@@ -5,13 +5,17 @@ using System.Runtime.InteropServices;
 namespace Wkhtmltopdf.NetCore
 {
     /// <summary>
-    /// Legacy. Uses <see cref="WkhtmltopdfConfiguration.RotativaPath"/> as prefix.
-    /// <para/> Appends OS depended folder and executable name.
+    ///     Legacy. Uses <see cref="WkhtmltopdfConfiguration.RotativaPath" /> as prefix.
+    ///     <para />
+    ///     Appends OS depended folder and executable name.
     /// </summary>
     internal class RotativaPathAsPrefixPathProvider : IWkhtmltopdfPathProvider
     {
         internal static RotativaPathAsPrefixPathProvider Default { get; } = new RotativaPathAsPrefixPathProvider();
 
+        /**
+         * <inheritDoc />
+         */
         public string GetPath()
         {
 #pragma warning disable 612

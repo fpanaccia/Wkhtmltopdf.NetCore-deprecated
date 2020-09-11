@@ -5,15 +5,17 @@ using System.Runtime.InteropServices;
 namespace Wkhtmltopdf.NetCore
 {
     /// <summary>
-    /// Emulates legacy registration behavior. 
+    ///     Emulates legacy registration behavior.
     /// </summary>
     public class LegacyPathProvider : IWkhtmltopdfPathProvider
     {
         private readonly string _rotativaLocation;
 
         /// <summary>
-        /// Constructs path from <see cref="AppDomain.CurrentDomain"/>'s base directory, <see cref="wkhtmltopdfRelativePath"/>,
-        /// <para/>OS dependent folder and executable name.
+        ///     Constructs path from <see cref="AppDomain.CurrentDomain" />'s base directory,
+        ///     <see cref="wkhtmltopdfRelativePath" />,
+        ///     <para />
+        ///     OS dependent folder and executable name.
         /// </summary>
         /// <param name="wkhtmltopdfRelativePath"></param>
         public LegacyPathProvider(string wkhtmltopdfRelativePath = "Rotativa")
@@ -24,7 +26,7 @@ namespace Wkhtmltopdf.NetCore
             {
                 throw new Exception("Folder containing wkhtmltopdf not found, searched for " + wkhtmlPath);
             }
-            
+
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 _rotativaLocation = Path.Combine(wkhtmlPath, "Windows", "wkhtmltopdf.exe");
@@ -44,6 +46,9 @@ namespace Wkhtmltopdf.NetCore
             }
         }
 
+        /**
+         * <inheritDoc />
+         */
         public string GetPath() => _rotativaLocation;
     }
 }
