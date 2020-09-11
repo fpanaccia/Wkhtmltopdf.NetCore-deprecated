@@ -11,14 +11,12 @@
         ///     Constructs <see cref="AbsolutePathProvider" />.
         /// </summary>
         /// <param name="path">Absolute path to wkthmltopdf/wkthmltoimage.</param>
-        public AbsolutePathProvider(string path)
+        public AbsolutePathProvider(string path = "wkhtmltopdf")
         {
             _path = path;
         }
 
-        /**
-         * <inheritDoc />
-         */
+        /* <inheritDoc /> */
         public string GetPath() => _path;
     }
 }

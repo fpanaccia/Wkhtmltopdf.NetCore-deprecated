@@ -46,9 +46,7 @@ namespace Wkhtmltopdf.NetCore
             }
         }
 
-        /**
-         * <inheritDoc />
-         */
+        /* <inheritDoc /> */
         public string GetPath() => _rotativaLocation;
     }
 }

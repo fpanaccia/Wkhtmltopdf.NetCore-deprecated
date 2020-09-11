@@ -63,55 +63,61 @@ namespace Wkhtmltopdf.NetCore
                 html = SpecialCharsEncode(html);
             }
 
-            using (var proc = new Process())
+            var wkhtmlPath = pathProvider.GetPath();
+            using var proc = new Process
             {
-                proc.StartInfo = new ProcessStartInfo
+                StartInfo = new ProcessStartInfo
                 {
-                    FileName = pathProvider.GetPath(),
+                    FileName = wkhtmlPath,
                     Arguments = switches,
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
                     RedirectStandardInput = true,
                     CreateNoWindow = true
-                };
-
-                proc.Start();
-
-                // generate PDF from given HTML string, not from URL
-                if (!string.IsNullOrEmpty(html))
-                {
-                    using (var sIn = proc.StandardInput)
-                    {
-                        sIn.WriteLine(html);
-                    }
                 }
+            };
 
-                using (var ms = new MemoryStream())
+            try
+            {
+                proc.Start();
+            }
+            catch (Exception e)
+            {
+                throw new WkhtmlDriverException($"Failed to start wkhtmltodpf at path {wkhtmlPath}.", e);
+            }
+
+            // generate PDF from given HTML string, not from URL
+            if (!string.IsNullOrEmpty(html))
+            {
+                using (var sIn = proc.StandardInput)
                 {
-                    using (var sOut = proc.StandardOutput.BaseStream)
-                    {
-                        byte[] buffer = new byte[4096];
-                        int read;
-
-                        while ((read = sOut.Read(buffer, 0, buffer.Length)) > 0)
-                        {
-                            ms.Write(buffer, 0, read);
-                        }
-                    }
-
-                    string error = proc.StandardError.ReadToEnd();
-
-                    if (ms.Length == 0)
-                    {
-                        throw new Exception(error);
-                    }
-
-                    proc.WaitForExit();
-
-                    return ms.ToArray();
+                    sIn.WriteLine(html);
                 }
             }
+
+            using var ms = new MemoryStream();
+            using (var sOut = proc.StandardOutput.BaseStream)
+            {
+                byte[] buffer = new byte[4096];
+                int read;
+
+                while ((read = sOut.Read(buffer, 0, buffer.Length)) > 0)
+                {
+                    ms.Write(buffer, 0, read);
+                }
+            }
+
+            string error = proc.StandardError.ReadToEnd();
+
+            if (ms.Length == 0)
+            {
+                throw new Exception(error);
+            }
+
+            proc.WaitForExit();
+
+            return ms.ToArray();
         }
               
         /// <summary>

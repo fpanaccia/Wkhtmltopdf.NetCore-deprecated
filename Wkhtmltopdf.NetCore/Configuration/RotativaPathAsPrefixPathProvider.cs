@@ -13,9 +13,7 @@ namespace Wkhtmltopdf.NetCore
     {
         internal static RotativaPathAsPrefixPathProvider Default { get; } = new RotativaPathAsPrefixPathProvider();
 
-        /**
-         * <inheritDoc />
-         */
+        /* <inheritDoc /> */
         public string GetPath()
         {
 #pragma warning disable 612

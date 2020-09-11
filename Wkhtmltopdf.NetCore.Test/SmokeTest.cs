@@ -58,7 +58,7 @@ namespace Wkhtmltopdf.NetCore.Test
         public void ResolutionWorks()
         {
             using var host = Host.CreateDefaultBuilder()
-                .ConfigureWebHostDefaults(builder => {})
+                .ConfigureWebHostDefaults(builder => { })
                 .ConfigureServices(services => services
                     .AddMvc()
                     .AddWkhtmltopdf<LegacyPathProvider>())
@@ -67,6 +67,16 @@ namespace Wkhtmltopdf.NetCore.Test
             using var serviceScope = host.Services.CreateScope();
             var generatePdf = serviceScope.ServiceProvider.GetService<IGeneratePdf>();
             generatePdf.GetPDF("<p><h1>Hello World</h1>This is html rendered text</p>");
+        }
+
+        [Test]
+        public void ThrowsForMissingExecutable()
+        {
+            var path = "not_valid_path";
+            var generatePdf = new GeneratePdf(null, new AbsolutePathProvider(path));
+
+            var ex = Assert.Throws<WkhtmlDriverException>(() => generatePdf.GetPDF(""));
+            StringAssert.Contains(path, ex.Message);
         }
     }
 }
