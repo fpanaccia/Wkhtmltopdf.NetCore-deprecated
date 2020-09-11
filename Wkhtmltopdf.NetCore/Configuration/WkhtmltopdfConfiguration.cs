@@ -82,8 +82,7 @@ namespace Wkhtmltopdf.NetCore
                 ? new ServiceDescriptor(typeof(IWkhtmltopdfPathProvider), typeof(T), lifetime)
                 : new ServiceDescriptor(typeof(IWkhtmltopdfPathProvider), factory, lifetime));
 
-            var fileProvider = new UpdateableFileProvider();
-            AddCore(builder.Services, fileProvider);
+            AddCore(builder.Services, new UpdateableFileProvider());
             return builder;
         }
 
@@ -93,6 +92,7 @@ namespace Wkhtmltopdf.NetCore
             services.TryAddTransient<ITempDataProvider, SessionStateTempDataProvider>();
             services.TryAddSingleton<IRazorViewEngine, RazorViewEngine>();
             services.TryAddTransient<IRazorViewToStringRenderer, RazorViewToStringRenderer>();
+            services.TryAddTransient<IWkhtmlDriver, WkhtmlDriver>();
             services.TryAddTransient<IGeneratePdf, GeneratePdf>();
 
             return services;

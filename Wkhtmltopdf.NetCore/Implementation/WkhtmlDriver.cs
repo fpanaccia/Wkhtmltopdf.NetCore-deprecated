@@ -3,11 +3,22 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
+using Wkhtmltopdf.NetCore.Interfaces;
 
 namespace Wkhtmltopdf.NetCore
 {
-    public static class WkhtmlDriver
+    public class WkhtmlDriver : IWkhtmlDriver
     {
+        private readonly IWkhtmltopdfPathProvider _pathProvider;
+
+        public WkhtmlDriver(IWkhtmltopdfPathProvider pathProvider = null)
+        {
+            _pathProvider = pathProvider ?? RotativaPathAsPrefixPathProvider.Default;
+        }
+
+        /* <inheritDoc /> */
+        public byte[] Convert(IConvertOptions options, string html) => Convert(_pathProvider, options.GetConvertOptions(), html);
+        
         /// <summary>
         /// Converts given URL or HTML string to PDF.
         /// </summary>
@@ -48,7 +59,7 @@ namespace Wkhtmltopdf.NetCore
         /// <param name="switches">Switches that will be passed to wkhtmltopdf binary.</param>
         /// <param name="html">String containing HTML code that should be converted to PDF.</param>
         /// <returns>PDF as byte array.</returns>
-        public static byte[] Convert(IWkhtmltopdfPathProvider pathProvider, string switches, string html)
+        private static byte[] Convert(IWkhtmltopdfPathProvider pathProvider, string switches, string html)
         {
             // switches:
             //     "-q"  - silent output, only errors - no progress messages
