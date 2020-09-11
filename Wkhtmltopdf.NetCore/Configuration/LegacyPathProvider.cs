@@ -12,8 +12,7 @@ namespace Wkhtmltopdf.NetCore
         private readonly string _rotativaLocation;
 
         /// <summary>
-        ///     Constructs path from <see cref="AppDomain.CurrentDomain" />'s base directory,
-        ///     <see cref="wkhtmltopdfRelativePath" />,
+        ///     Constructs path from <see cref="AppDomain.CurrentDomain" />'s base directory, <see cref="wkhtmltopdfRelativePath" />,
         ///     <para />
         ///     OS dependent folder and executable name.
         /// </summary>
