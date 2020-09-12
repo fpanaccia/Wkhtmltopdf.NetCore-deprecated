@@ -1,17 +1,17 @@
 ﻿namespace Wkhtmltopdf.NetCore
 {
     /// <summary>
-    ///     Provides absolute path to wkthmltopdf/wkthmltoimage.
+    ///     Provides exact specified path to wkthmltopdf/wkthmltoimage.
     /// </summary>
-    public class FullPathProvider : IWkhtmltopdfPathProvider
+    public class ExactPathProvider : IWkhtmltopdfPathProvider
     {
         private readonly string _path;
 
         /// <summary>
-        ///     Constructs <see cref="FullPathProvider" />. Uses provided path as is.
+        ///     Constructs new instance of <see cref="ExactPathProvider" />. Uses provided path as is.
         /// </summary>
         /// <param name="path">Path to wkthmltopdf/wkthmltoimage.</param>
-        public FullPathProvider(string path = "wkhtmltopdf")
+        public ExactPathProvider(string path = "wkhtmltopdf")
         {
             _path = path;
         }

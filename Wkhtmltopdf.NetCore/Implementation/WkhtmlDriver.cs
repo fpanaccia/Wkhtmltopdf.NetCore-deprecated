@@ -49,7 +49,7 @@ namespace Wkhtmltopdf.NetCore
                 throw new Exception("wkhtmltopdf not found, searched for " + rotativaLocation);
             }
 
-            return Convert(new FullPathProvider(rotativaLocation), switches, html);
+            return Convert(new ExactPathProvider(rotativaLocation), switches, html);
         }
 
         /// <summary>

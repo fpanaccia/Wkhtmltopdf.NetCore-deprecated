@@ -5,6 +5,9 @@ using NUnit.Framework;
 
 namespace Wkhtmltopdf.NetCore.Test
 {
+    /// <summary>
+    /// Some smoke tests including legacy API.
+    /// </summary>
     public class SmokeTest
     {
         [SetUp]
@@ -41,7 +44,7 @@ namespace Wkhtmltopdf.NetCore.Test
         public void CanConvertWithAbsoluteProvider()
         {
             var path = new LegacyPathProvider().GetPath();
-            var generatePdf = new GeneratePdf(null, new WkhtmlDriver(new FullPathProvider(path)));
+            var generatePdf = new GeneratePdf(null, new WkhtmlDriver(new ExactPathProvider(path)));
             generatePdf.GetPDF("<p><h1>Hello World</h1>This is html rendered text</p>");
         }
 
@@ -83,7 +86,7 @@ namespace Wkhtmltopdf.NetCore.Test
         public void ThrowsForMissingExecutable()
         {
             var path = "not_valid_path";
-            var generatePdf = new GeneratePdf(null, new WkhtmlDriver(new FullPathProvider(path)));
+            var generatePdf = new GeneratePdf(null, new WkhtmlDriver(new ExactPathProvider(path)));
 
             var ex = Assert.Throws<WkhtmlDriverException>(() => generatePdf.GetPDF(""));
             StringAssert.Contains(path, ex.Message);
