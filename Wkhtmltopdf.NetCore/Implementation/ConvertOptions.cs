@@ -105,6 +105,7 @@ namespace Wkhtmltopdf.NetCore
         [OptionFlag("--replace")]
         public Dictionary<string, string> Replacements { get; set; }
 
+        /* <inheritDoc /> */
         public string GetConvertOptions()
         {
             var result = new StringBuilder();

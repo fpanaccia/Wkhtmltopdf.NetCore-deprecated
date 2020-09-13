@@ -8,11 +8,20 @@ namespace Wkhtmltopdf.NetCore
     public class GeneratePdf : IGeneratePdf
     {
         private readonly IRazorViewToStringRenderer _engine;
+        private readonly IWkhtmlDriver _wkhtmlDriver;
         private IConvertOptions _convertOptions;
 
-        public GeneratePdf(IRazorViewToStringRenderer engine)
+        /// <summary>
+        /// Initializes new instance of <see cref="GeneratePdf"/>.  
+        /// </summary>
+        /// <param name="engine"><see cref="IRazorViewToStringRenderer"/>.</param>
+        /// <param name="wkhtmlDriver"><see cref="IWkhtmlDriver"/>.</param>
+        public GeneratePdf(
+            IRazorViewToStringRenderer engine, 
+            IWkhtmlDriver wkhtmlDriver = null)
         {
             _engine = engine;
+            _wkhtmlDriver = wkhtmlDriver ?? new WkhtmlDriver();
             _convertOptions = new ConvertOptions();
         }
 
@@ -21,11 +30,7 @@ namespace Wkhtmltopdf.NetCore
             _convertOptions = convertOptions;
         }
 
-        public byte[] GetPDF(string html)
-        {
-            return WkhtmlDriver.Convert(WkhtmltopdfConfiguration.RotativaPath, _convertOptions.GetConvertOptions(),
-                html);
-        }
+        public byte[] GetPDF(string html) => _wkhtmlDriver.Convert(_convertOptions, html);
 
         public async Task<byte[]> GetByteArray<T>(string view, T model)
         {
