@@ -2,6 +2,9 @@
 
 namespace Wkhtmltopdf.NetCore
 {
+    /// <summary>
+    /// Invokes the wkhtmltopdf.
+    /// </summary>
     public interface IWkhtmlDriver
     {
         /// <summary>

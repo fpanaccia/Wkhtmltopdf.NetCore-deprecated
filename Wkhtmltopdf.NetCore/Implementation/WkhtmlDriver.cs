@@ -7,16 +7,22 @@ using Wkhtmltopdf.NetCore.Interfaces;
 
 namespace Wkhtmltopdf.NetCore
 {
+    /// <summary>
+    /// Invokes the wkhtmltopdf.
+    /// </summary>
     public class WkhtmlDriver : IWkhtmlDriver
     {
         private readonly IWkhtmltopdfPathProvider _pathProvider;
 
+        /// <summary>
+        /// Constructs new instance of <see cref="WkhtmlDriver"/>.
+        /// </summary>
         public WkhtmlDriver(IWkhtmltopdfPathProvider pathProvider = null)
         {
             _pathProvider = pathProvider ?? RotativaPathAsPrefixPathProvider.Default;
         }
 
-        /* <inheritDoc /> */
+        /** <inheritDoc /> */
         public byte[] Convert(IConvertOptions options, string html) => Convert(_pathProvider, options.GetConvertOptions(), html);
         
         /// <summary>
@@ -26,7 +32,7 @@ namespace Wkhtmltopdf.NetCore
         /// <param name="switches">Switches that will be passed to wkhtmltopdf binary.</param>
         /// <param name="html">String containing HTML code that should be converted to PDF.</param>
         /// <returns>PDF as byte array.</returns>
-        [Obsolete]
+        [Obsolete("Use injected " + nameof(IWkhtmlDriver) + ".")]
         public static byte[] Convert(string wkhtmlPath, string switches, string html)
         {
             string rotativaLocation;

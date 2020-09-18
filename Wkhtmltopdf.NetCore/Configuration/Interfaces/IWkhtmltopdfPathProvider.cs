@@ -1,5 +1,8 @@
 ﻿namespace Wkhtmltopdf.NetCore
 {
+    /// <summary>
+    /// Provides path to wkhtmltopdf.
+    /// </summary>
     public interface IWkhtmltopdfPathProvider
     {
         /// <summary>

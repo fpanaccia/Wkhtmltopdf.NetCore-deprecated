@@ -16,7 +16,7 @@
             _path = path;
         }
 
-        /* <inheritDoc /> */
+        /** <inheritDoc /> */
         public string GetPath() => _path;
     }
 }
