@@ -13,17 +13,17 @@ namespace Wkhtmltopdf.NetCore.Test
         [SetUp]
         public void SetRotativaPath()
         {
-#pragma warning disable 612
+#pragma warning disable 618
             WkhtmltopdfConfiguration.RotativaPath = AppDomain.CurrentDomain.BaseDirectory + "Rotativa";
-#pragma warning restore 612
+#pragma warning restore 618
         }
 
         [TearDown]
         public void ClearRotativaPath()
         {
-#pragma warning disable 612
+#pragma warning disable 618
             WkhtmltopdfConfiguration.RotativaPath = null;
-#pragma warning restore 612
+#pragma warning restore 618
         }
 
         [Test]
@@ -55,9 +55,9 @@ namespace Wkhtmltopdf.NetCore.Test
             using var host = Host.CreateDefaultBuilder()
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-#pragma warning disable 612
+#pragma warning disable 618
                     webBuilder.ConfigureServices(services => services.AddWkhtmltopdf());
-#pragma warning restore 612
+#pragma warning restore 618
                 })
                 .Build();
 

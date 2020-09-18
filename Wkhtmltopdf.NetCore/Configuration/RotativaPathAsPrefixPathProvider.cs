@@ -16,9 +16,9 @@ namespace Wkhtmltopdf.NetCore
         /* <inheritDoc /> */
         public string GetPath()
         {
-#pragma warning disable 612
+#pragma warning disable 618
             var wkhtmlPath = WkhtmltopdfConfiguration.RotativaPath;
-#pragma warning restore 612
+#pragma warning restore 618
 
             string rotativaLocation;
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))

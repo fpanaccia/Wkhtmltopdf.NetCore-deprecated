@@ -8,9 +8,14 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Wkhtmltopdf.NetCore
 {
+    /// <summary>
+    /// Extension methods for setting up Wkhtmltopdf.NetCore services.
+    /// </summary>
     public static class WkhtmltopdfConfiguration
     {
-        [Obsolete] public static string RotativaPath { get; set; }
+        [Obsolete("Use " + nameof(AddWkhtmltopdf) + " accepting " + nameof(IMvcBuilder)
+            + " with suitable " + nameof(IWkhtmltopdfPathProvider) + ".")]
+        public static string RotativaPath { get; set; }
 
         /// <summary>
         ///     Setup Rotativa library
@@ -20,7 +25,7 @@ namespace Wkhtmltopdf.NetCore
         ///     Optional. Relative path to the directory containing wkhtmltopdf.
         ///     Default is "Rotativa". Download at https://wkhtmltopdf.org/downloads.html
         /// </param>
-        [Obsolete]
+        [Obsolete("Use " + nameof(AddWkhtmltopdf) + " accepting " + nameof(IMvcBuilder) + ".")]
         public static IServiceCollection AddWkhtmltopdf(this IServiceCollection services,
             string wkhtmltopdfRelativePath = "Rotativa")
         {
