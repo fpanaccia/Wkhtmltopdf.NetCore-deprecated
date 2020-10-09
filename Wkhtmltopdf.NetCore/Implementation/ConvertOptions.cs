@@ -117,6 +117,12 @@ namespace Wkhtmltopdf.NetCore
         [OptionFlag("--image-dpi")]
         public int? ImageDpi { get; set; }
 
+        /// <summary>
+        /// Disable the intelligent shrinking strategy used by WebKit that makes the pixel/dpi ratio non-constant
+        /// </summary>
+        [OptionFlag("--disable-smart-shrinking")]
+        public bool DisableSmartShrinking { get; set; }
+
         /* <inheritDoc /> */
         public string GetConvertOptions()
         {
