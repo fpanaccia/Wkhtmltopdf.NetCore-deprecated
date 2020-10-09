@@ -44,7 +44,9 @@ namespace Wkhtmltopdf.NetCore.Test.Options
                         {"one", "1"},
                         {"two", "2"}
                     },
-                    new[] {"--replace \"one\" \"1\"", "--replace \"two\" \"2\""})
+                    new[] {"--replace \"one\" \"1\"", "--replace \"two\" \"2\""}),
+                ImageDpi = AddWithFormat(++counter, "--image-dpi {0}"),
+                ImageQuality = AddWithFormat(++counter, "--image-quality {0}")
             };
             
             var result = options.GetConvertOptions();

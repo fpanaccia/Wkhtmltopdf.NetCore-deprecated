@@ -105,6 +105,18 @@ namespace Wkhtmltopdf.NetCore
         [OptionFlag("--replace")]
         public Dictionary<string, string> Replacements { get; set; }
 
+        /// <summary>
+        /// Sets the compression quality of the images
+        /// </summary>
+        [OptionFlag("--image-quality")]
+        public int? ImageQuality { get; set; }
+
+        /// <summary>
+        /// Sets the dpi of the images
+        /// </summary>
+        [OptionFlag("--image-dpi")]
+        public int? ImageDpi { get; set; }
+
         /* <inheritDoc /> */
         public string GetConvertOptions()
         {
