@@ -105,6 +105,24 @@ namespace Wkhtmltopdf.NetCore
         [OptionFlag("--replace")]
         public Dictionary<string, string> Replacements { get; set; }
 
+        /// <summary>
+        /// Sets the compression quality of the images
+        /// </summary>
+        [OptionFlag("--image-quality")]
+        public int? ImageQuality { get; set; }
+
+        /// <summary>
+        /// Sets the dpi of the images
+        /// </summary>
+        [OptionFlag("--image-dpi")]
+        public int? ImageDpi { get; set; }
+
+        /// <summary>
+        /// Disable the intelligent shrinking strategy used by WebKit that makes the pixel/dpi ratio non-constant
+        /// </summary>
+        [OptionFlag("--disable-smart-shrinking")]
+        public bool DisableSmartShrinking { get; set; }
+
         /* <inheritDoc /> */
         public string GetConvertOptions()
         {

@@ -39,12 +39,15 @@ namespace Wkhtmltopdf.NetCore.Test.Options
                 PageWidth = AddWithFormat(++counter + 0.5, "--page-width {0}"),
                 IsGrayScale = AddWithValue(true, "-g"),
                 IsLowQuality = AddWithValue(true, "-l"),
+                DisableSmartShrinking = AddWithValue(true, "--disable-smart-shrinking"),
                 Replacements = AddWithValues(new Dictionary<string, string>
                     {
                         {"one", "1"},
                         {"two", "2"}
                     },
-                    new[] {"--replace \"one\" \"1\"", "--replace \"two\" \"2\""})
+                    new[] {"--replace \"one\" \"1\"", "--replace \"two\" \"2\""}),
+                ImageDpi = AddWithFormat(++counter, "--image-dpi {0}"),
+                ImageQuality = AddWithFormat(++counter, "--image-quality {0}")
             };
             
             var result = options.GetConvertOptions();
