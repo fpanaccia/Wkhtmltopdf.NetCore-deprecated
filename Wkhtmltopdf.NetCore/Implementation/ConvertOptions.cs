@@ -12,7 +12,15 @@ namespace Wkhtmltopdf.NetCore
         public ConvertOptions()
         {
             this.PageMargins = new Margins();
+            this.DPI = 96;
         }
+
+        /// <summary>
+        /// Change the dpi explicitly
+        /// </summary>
+        /// <remarks>Default value is 96</remarks>
+        [OptionFlag("-d")]
+        public int? DPI { get; set; }
 
         /// <summary>
         /// Sets the page size.
