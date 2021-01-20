@@ -75,6 +75,12 @@ namespace Wkhtmltopdf.NetCore
         public bool IsGrayScale { get; set; }
 
         /// <summary>
+        /// Display line above the footer
+        /// </summary>
+        [OptionFlag("--footer-line")]
+        public bool FooterLine { get; set; }
+
+        /// <summary>
         /// Path to header HTML file.
         /// </summary>
         [OptionFlag("--header-html")]
@@ -91,6 +97,24 @@ namespace Wkhtmltopdf.NetCore
         /// </summary>
         [OptionFlag("--footer-html")]
         public string FooterHtml { get; set; }
+
+        /// <summary>
+        /// Footer right content.
+        /// </summary>
+        [OptionFlag("--footer-right")]
+        public string FooterRight { get; set; }
+        
+        /// <summary>
+        /// Footer center content.
+        /// </summary>
+        [OptionFlag("--footer-center")]
+        public string FooterCenter { get; set; }
+        
+        /// <summary>
+        /// Footer left content.
+        /// </summary>
+        [OptionFlag("--footer-left")]
+        public string FooterLeft { get; set; }
 
         /// <summary>
         /// Sets the footer spacing.
