@@ -13,6 +13,89 @@ namespace Wkhtmltopdf.NetCore
         /// </summary>
         /// <param name="wkhtmlPath">Path to wkthmltopdf\wkthmltoimage.</param>
         /// <param name="switches">Switches that will be passed to wkhtmltopdf binary.</param>
+        /// <param name="url">Path to the url that should be converted to PDF.</param>
+        /// <returns>PDF as byte array.</returns>
+        public static byte[] Convert(string wkhtmlPath, string switches, Uri url)
+        {
+            // switches:
+            //     "-q"  - silent output, only errors - no progress messages
+            //     " -"  - switch output to stdout
+            //     "- -" - switch input to stdin and output to stdout
+            switches = $"-q {switches} {url} -";
+
+            string rotativaLocation;
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                rotativaLocation = Path.Combine(wkhtmlPath, "Windows", "wkhtmltopdf.exe");
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                rotativaLocation = Path.Combine(wkhtmlPath, "Mac", "wkhtmltopdf");
+            }
+            else
+            {
+                rotativaLocation = Path.Combine(wkhtmlPath, "wkhtmltopdf");
+            }
+
+            if (!File.Exists(rotativaLocation))
+            {
+                throw new Exception("wkhtmltopdf not found, searched for " + rotativaLocation);
+            }
+
+            using (var proc = new Process())
+            {
+                try
+                {
+                    proc.StartInfo = new ProcessStartInfo
+                    {
+                        FileName = rotativaLocation,
+                        Arguments = switches,
+                        UseShellExecute = false,
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        RedirectStandardInput = true,
+                        CreateNoWindow = true
+                    };
+
+                    proc.Start();
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+
+                using (var ms = new MemoryStream())
+                {
+                    using (var sOut = proc.StandardOutput.BaseStream)
+                    {
+                        byte[] buffer = new byte[4096];
+                        int read;
+
+                        while ((read = sOut.Read(buffer, 0, buffer.Length)) > 0)
+                        {
+                            ms.Write(buffer, 0, read);
+                        }
+                    }
+
+                    string error = proc.StandardError.ReadToEnd();
+
+                    if (ms.Length == 0)
+                    {
+                        throw new Exception(error);
+                    }
+
+                    proc.WaitForExit();
+
+                    return ms.ToArray();
+                }
+            }
+        }
+        /// <summary>
+        /// Converts given URL or HTML string to PDF.
+        /// </summary>
+        /// <param name="wkhtmlPath">Path to wkthmltopdf\wkthmltoimage.</param>
+        /// <param name="switches">Switches that will be passed to wkhtmltopdf binary.</param>
         /// <param name="html">String containing HTML code that should be converted to PDF.</param>
         /// <returns>PDF as byte array.</returns>
         public static byte[] Convert(string wkhtmlPath, string switches, string html)
@@ -42,7 +125,7 @@ namespace Wkhtmltopdf.NetCore
             }
             else
             {
-                rotativaLocation = Path.Combine(wkhtmlPath, "Linux", "wkhtmltopdf");
+                rotativaLocation = Path.Combine(wkhtmlPath, "wkhtmltopdf");
             }
 
             if (!File.Exists(rotativaLocation))
