@@ -18,8 +18,8 @@ namespace Wkhtmltopdf.NetCore
         Task<IActionResult> GetPdf(Uri url);
         Task<byte[]> GetByteArray(string View);
         void SetConvertOptions(IConvertOptions options);
-        byte[] GetPDF(string html);
-        byte[] GetPDF(Uri url);
+        Task<byte[]> GetPDF(string html);
+        Task<byte[]> GetPDF(Uri url);
         void UpdateView(string path, string viewHTML);
         bool ExistsView(string path);
         void AddView(string path, string viewHTML);
