@@ -16,7 +16,7 @@ namespace Wkhtmltopdf.NetCore
         /// <param name="switches">Switches that will be passed to wkhtmltopdf binary.</param>
         /// <param name="url">Path to the url that should be converted to PDF.</param>
         /// <returns>PDF as byte array.</returns>
-        public static Task<byte[]> Convert(string wkhtmlPath, string switches, Uri url)
+        public static async Task<byte[]> Convert(string wkhtmlPath, string switches, Uri url)
         {
             // switches:
             //     "-q"  - silent output, only errors - no progress messages
@@ -67,9 +67,10 @@ namespace Wkhtmltopdf.NetCore
                 {
                     throw ex;
                 }
-                proc.WaitForExit();
 
-                return File.ReadAllBytesAsync(file);
+                await proc.WaitForExitAsync();
+
+                return await File.ReadAllBytesAsync(file);
             }
         }
 
@@ -166,7 +167,7 @@ namespace Wkhtmltopdf.NetCore
                         throw new Exception(error);
                     }
 
-                    proc.WaitForExit();
+                    await proc.WaitForExitAsync();
 
                     return ms.ToArray();
                 }
