@@ -12,6 +12,7 @@ namespace Wkhtmltopdf.NetCore
         public ConvertOptions()
         {
             this.PageMargins = new Margins();
+            this.EnableJavaScript = true;
         }
 
         /// <summary>
@@ -97,6 +98,26 @@ namespace Wkhtmltopdf.NetCore
         /// </summary>
         [OptionFlag("--footer-spacing")]
         public int? FooterSpacing { get; set; }
+        
+        /// <summary>
+        /// Do not allow web pages to run JavaScript
+        /// </summary>
+        /// <remarks>Disabled by default</remarks>
+        [OptionFlag("--disable-javascript")]
+        public bool DisableJavaScript { get; set; }
+
+        /// <summary>
+        /// Allow web pages to run JavaScript
+        /// </summary>
+        [OptionFlag("--enable-javascript")]
+        public bool EnableJavaScript { get; set; }
+                
+        /// <summary>
+        /// Waits this number of milliseconds for JavaScript to finish executing 
+        /// </summary>
+        /// <remarks>Default is 200ms</remarks>
+        [OptionFlag("--javascript-delay")]
+        public int? JavaScriptDelay { get; set; }
 
         /// <summary>
         /// Sets the variables to replace in the header and footer html
