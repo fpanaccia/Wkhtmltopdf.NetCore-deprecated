@@ -99,6 +99,12 @@ namespace Wkhtmltopdf.NetCore
         public int? FooterSpacing { get; set; }
 
         /// <summary>
+        /// Enables access to local files.
+        /// </summary>
+        [OptionFlag("--enable-local-file-access")]
+        public bool EnableLocalFileAccess { get; set; }
+
+        /// <summary>
         /// Sets the variables to replace in the header and footer html
         /// </summary>
         /// <remarks>Replaces [name] with value in header and footer (repeatable).</remarks>
