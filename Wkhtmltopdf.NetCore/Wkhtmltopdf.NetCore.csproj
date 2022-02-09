@@ -1,15 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
-    <AssemblyVersion>3.0.5.0</AssemblyVersion>
-    <FileVersion>3.0.5.0</FileVersion>
-    <Version>3.0.2</Version>
+    <TargetFrameworks>net5.0</TargetFrameworks>
+    <AssemblyVersion>5.0.2.0</AssemblyVersion>
+    <FileVersion>5.0.2.0</FileVersion>
+    <Version>5.0.2-preview</Version>
     <Description>This project implements the library wkhtmltopdf for asp net core and a view engine, working in windows, macos, linux and docker.
 
 For more information about how to use it, go to https://github.com/fpanaccia/Wkhtmltopdf.NetCore.Example</Description>
     <RepositoryUrl>https://github.com/fpanaccia/Wkhtmltopdf.NetCore</RepositoryUrl>
-    <PackageReleaseNotes>improvements in options + new generations methods</PackageReleaseNotes>
+    <PackageReleaseNotes>net 5 - temporary implementation until 5.0.4</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
@@ -25,11 +25,11 @@ For more information about how to use it, go to https://github.com/fpanaccia/Wkh
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="build\netcoreapp3.0\*" Pack="true" PackagePath="build\netcoreapp3.0" />
+    <None Include="build\net5.0\*" Pack="true" PackagePath="build\netcoreapp3.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="build\netcoreapp3.0\Wkhtmltopdf.NetCore.targets">
+    <None Update="build\net5.0\Wkhtmltopdf.NetCore.targets">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
