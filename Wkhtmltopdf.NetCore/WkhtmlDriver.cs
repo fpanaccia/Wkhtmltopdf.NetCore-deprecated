@@ -83,20 +83,6 @@ namespace Wkhtmltopdf.NetCore
         /// <returns>PDF as byte array.</returns>
         public static async Task<byte[]> Convert(string wkhtmlPath, string switches, string html)
         {
-            // switches:
-            //     "-q"  - silent output, only errors - no progress messages
-            //     " -"  - switch output to stdout
-            //     "- -" - switch input to stdin and output to stdout
-
-            switches = $"-q {switches} -";
-
-            // generate PDF from given HTML string, not from URL
-            if (!string.IsNullOrEmpty(html))
-            {
-                switches += " -";
-                html = SpecialCharsEncode(html);
-            }
-
             string rotativaLocation;
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -116,10 +102,23 @@ namespace Wkhtmltopdf.NetCore
             {
                 throw new Exception("wkhtmltopdf not found, searched for " + rotativaLocation);
             }
-
-            using (var proc = new Process())
+            
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                try
+                // switches:
+                //     "-q"  - silent output, only errors - no progress messages
+                //     " -"  - switch output to stdout
+                //     "- -" - switch input to stdin and output to stdout
+                switches = "-q " + switches + " -";
+
+                // generate PDF from given HTML string, not from URL
+                if (!string.IsNullOrEmpty(html))
+                {
+                    switches += " -";
+                    html = SpecialCharsEncode(html);
+                }
+
+                using (var proc = new Process())
                 {
                     proc.StartInfo = new ProcessStartInfo
                     {
@@ -133,43 +132,97 @@ namespace Wkhtmltopdf.NetCore
                     };
 
                     proc.Start();
+
+                    // generate PDF from given HTML string, not from URL
+                    if (!string.IsNullOrEmpty(html))
+                    {
+                        using (var sIn = proc.StandardInput)
+                        {
+                            sIn.WriteLine(html);
+                        }
+                    }
+
+                    using (var ms = new MemoryStream())
+                    {
+                        using (var sOut = proc.StandardOutput.BaseStream)
+                        {
+                            byte[] buffer = new byte[4096];
+                            int read;
+
+                            while ((read = sOut.Read(buffer, 0, buffer.Length)) > 0)
+                            {
+                                ms.Write(buffer, 0, read);
+                            }
+                        }
+
+                        string error = proc.StandardError.ReadToEnd();
+
+                        if (ms.Length == 0)
+                        {
+                            throw new Exception(error);
+                        }
+
+                        proc.WaitForExit();
+
+                        return ms.ToArray();
+                    }
                 }
-                catch (Exception ex)
-                {
-                    throw ex;
-                }
+            }
+            else
+            {
+                // switches:
+                //     "-q"  - silent output, only errors - no progress messages
+                //     " -"  - switch output to stdout
+                //     "- -" - switch input to stdin and output to stdout
+                switches = "-q " + switches;
 
                 // generate PDF from given HTML string, not from URL
                 if (!string.IsNullOrEmpty(html))
                 {
-                    using (var sIn = proc.StandardInput)
-                    {
-                        await sIn.WriteLineAsync(html);
-                    }
+                    html = SpecialCharsEncode(html);
                 }
-                using (var ms = new MemoryStream())
+
+                var fakeFileName = Guid.NewGuid();
+                File.WriteAllText($"{fakeFileName}.html", html);
+
+                switches += $" {fakeFileName}.html {fakeFileName}.pdf";
+
+                using (var proc = new Process())
                 {
-                    using (var sOut = proc.StandardOutput.BaseStream)
+                    proc.StartInfo = new ProcessStartInfo
                     {
-                        byte[] buffer = new byte[4096];
-                        int read;
+                        FileName = rotativaLocation,
+                        Arguments = switches,
+                        UseShellExecute = false,
+                        //RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        //RedirectStandardInput = true,
+                        CreateNoWindow = true
+                    };
 
-                        while ((read = await sOut.ReadAsync(buffer, 0, buffer.Length)) > 0)
+                    proc.Start();
+
+                    using (var ms = new MemoryStream())
+                    {
+                        string error = proc.StandardError.ReadToEnd();
+
+                        proc.WaitForExit();
+
+                        using (var fileStream = new FileStream($"{fakeFileName}.pdf", FileMode.Open, FileAccess.Read))
                         {
-                            ms.Write(buffer, 0, read);
+                            fileStream.CopyTo(ms);
                         }
+
+                        File.Delete($"{fakeFileName}.pdf");
+                        File.Delete($"{fakeFileName}.html");
+
+                        if (ms.Length == 0)
+                        {
+                            throw new Exception(error);
+                        }
+
+                        return ms.ToArray();
                     }
-
-                    string error = await proc.StandardError.ReadToEndAsync();
-
-                    if (ms.Length == 0)
-                    {
-                        throw new Exception(error);
-                    }
-
-                    await proc.WaitForExitAsync();
-
-                    return ms.ToArray();
                 }
             }
         }
