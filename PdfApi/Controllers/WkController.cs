@@ -86,7 +86,7 @@ public class WkController : ControllerBase
                 },
                 PageMargins = new ()
                 {
-                    Right = 4,
+                    Right = 10,
                     Left = 4
                 },
                 FooterSpacing = 3,
