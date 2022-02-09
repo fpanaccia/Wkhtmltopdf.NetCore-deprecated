@@ -22,9 +22,16 @@ namespace Wkhtmltopdf.NetCore
             _convertOptions = convertOptions;
         }
 
-        public byte[] GetPDF(string html)
+        public Task<byte[]> GetPDF(string html)
         {
-            return WkhtmlDriver.Convert(WkhtmltopdfConfiguration.RotativaPath, _convertOptions.GetConvertOptions(), html);
+            return WkhtmlDriver.Convert(WkhtmltopdfConfiguration.RotativaPath, _convertOptions.GetConvertOptions(),
+                html);
+        }
+
+        public Task<byte[]> GetPDF(Uri url)
+        {
+            return WkhtmlDriver.Convert(WkhtmltopdfConfiguration.RotativaPath, _convertOptions.GetConvertOptions(),
+                url);
         }
 
         public async Task<byte[]> GetByteArray<T>(string View, T model)
@@ -32,7 +39,7 @@ namespace Wkhtmltopdf.NetCore
             try
             {
                 var html = await _engine.RenderViewToStringAsync(View, model);
-                return GetPDF(html);
+                return await GetPDF(html);
             }
             catch (Exception ex)
             {
@@ -43,9 +50,18 @@ namespace Wkhtmltopdf.NetCore
         public async Task<IActionResult> GetPdf<T>(string View, T model)
         {
             var html = await _engine.RenderViewToStringAsync(View, model);
-            var byteArray = GetPDF(html);
+            var byteArray = await GetPDF(html);
             MemoryStream pdfStream = new MemoryStream();
-            pdfStream.Write(byteArray, 0, byteArray.Length);
+            await pdfStream.WriteAsync(byteArray, 0, byteArray.Length);
+            pdfStream.Position = 0;
+            return new FileStreamResult(pdfStream, "application/pdf");
+        }
+
+        public async Task<IActionResult> GetPdf<T>(Uri url)
+        {
+            var byteArray = await GetPDF(url);
+            MemoryStream pdfStream = new MemoryStream();
+            await pdfStream.WriteAsync(byteArray, 0, byteArray.Length);
             pdfStream.Position = 0;
             return new FileStreamResult(pdfStream, "application/pdf");
         }
@@ -53,7 +69,7 @@ namespace Wkhtmltopdf.NetCore
         public async Task<IActionResult> GetPdfViewInHtml<T>(string ViewInHtml, T model)
         {
             var html = await _engine.RenderHtmlToStringAsync(ViewInHtml, model);
-            var byteArray = GetPDF(html);
+            var byteArray = await GetPDF(html);
             MemoryStream pdfStream = new MemoryStream();
             pdfStream.Write(byteArray, 0, byteArray.Length);
             pdfStream.Position = 0;
@@ -65,7 +81,7 @@ namespace Wkhtmltopdf.NetCore
             try
             {
                 var view = await _engine.RenderHtmlToStringAsync(ViewInHtml, model);
-                return GetPDF(view);
+                return await GetPDF(view);
             }
             catch (Exception ex)
             {
@@ -82,7 +98,7 @@ namespace Wkhtmltopdf.NetCore
         public async Task<IActionResult> GetPdfViewInHtml(string ViewInHtml)
         {
             var html = await _engine.RenderHtmlToStringAsync(ViewInHtml);
-            var byteArray = GetPDF(html);
+            var byteArray = await GetPDF(html);
             MemoryStream pdfStream = new MemoryStream();
             pdfStream.Write(byteArray, 0, byteArray.Length);
             pdfStream.Position = 0;
@@ -94,7 +110,7 @@ namespace Wkhtmltopdf.NetCore
             try
             {
                 var view = await _engine.RenderHtmlToStringAsync(ViewInHtml);
-                return GetPDF(view);
+                return await GetPDF(view);
             }
             catch (Exception ex)
             {
@@ -105,9 +121,18 @@ namespace Wkhtmltopdf.NetCore
         public async Task<IActionResult> GetPdf(string View)
         {
             var html = await _engine.RenderViewToStringAsync(View);
-            var byteArray = GetPDF(html);
+            var byteArray = await GetPDF(html);
             MemoryStream pdfStream = new MemoryStream();
             pdfStream.Write(byteArray, 0, byteArray.Length);
+            pdfStream.Position = 0;
+            return new FileStreamResult(pdfStream, "application/pdf");
+        }
+
+        public async Task<IActionResult> GetPdf(Uri url)
+        {
+            var byteArray = await GetPDF(url);
+            MemoryStream pdfStream = new MemoryStream();
+            await pdfStream.WriteAsync(byteArray, 0, byteArray.Length);
             pdfStream.Position = 0;
             return new FileStreamResult(pdfStream, "application/pdf");
         }
@@ -117,7 +142,7 @@ namespace Wkhtmltopdf.NetCore
             try
             {
                 var html = await _engine.RenderViewToStringAsync(View);
-                return GetPDF(html);
+                return await GetPDF(html);
             }
             catch (Exception ex)
             {

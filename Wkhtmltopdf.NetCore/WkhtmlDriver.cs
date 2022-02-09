@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Wkhtmltopdf.NetCore
 {
@@ -13,9 +14,74 @@ namespace Wkhtmltopdf.NetCore
         /// </summary>
         /// <param name="wkhtmlPath">Path to wkthmltopdf\wkthmltoimage.</param>
         /// <param name="switches">Switches that will be passed to wkhtmltopdf binary.</param>
+        /// <param name="url">Path to the url that should be converted to PDF.</param>
+        /// <returns>PDF as byte array.</returns>
+        public static async Task<byte[]> Convert(string wkhtmlPath, string switches, Uri url)
+        {
+            // switches:
+            //     "-q"  - silent output, only errors - no progress messages
+            //     " -"  - switch output to stdout
+            //     "- -" - switch input to stdin and output to stdout
+
+            var file = Path.GetTempFileName();
+            switches = $"-q {switches} \"{url}\" \"{file}\"";
+
+            string rotativaLocation;
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                rotativaLocation = Path.Combine(wkhtmlPath, "Windows", "wkhtmltopdf.exe");
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                rotativaLocation = Path.Combine(wkhtmlPath, "Mac", "wkhtmltopdf");
+            }
+            else
+            {
+                rotativaLocation = Path.Combine(wkhtmlPath, "wkhtmltopdf");
+            }
+
+            if (!File.Exists(rotativaLocation))
+            {
+                throw new Exception("wkhtmltopdf not found, searched for " + rotativaLocation);
+            }
+
+            using (var proc = new Process())
+            {
+                try
+                {
+                    proc.StartInfo = new ProcessStartInfo
+                    {
+                        FileName = rotativaLocation,
+                        Arguments = switches,
+                        UseShellExecute = false,
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        RedirectStandardInput = true,
+                        CreateNoWindow = true
+                    };
+
+                    proc.Start();
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+
+                await proc.WaitForExitAsync();
+
+                return await File.ReadAllBytesAsync(file);
+            }
+        }
+
+        /// <summary>
+        /// Converts given URL or HTML string to PDF.
+        /// </summary>
+        /// <param name="wkhtmlPath">Path to wkthmltopdf\wkthmltoimage.</param>
+        /// <param name="switches">Switches that will be passed to wkhtmltopdf binary.</param>
         /// <param name="html">String containing HTML code that should be converted to PDF.</param>
         /// <returns>PDF as byte array.</returns>
-        public static byte[] Convert(string wkhtmlPath, string switches, string html)
+        public static async Task<byte[]> Convert(string wkhtmlPath, string switches, string html)
         {
             string rotativaLocation;
 
@@ -29,7 +95,7 @@ namespace Wkhtmltopdf.NetCore
             }
             else
             {
-                rotativaLocation = Path.Combine(wkhtmlPath, "Linux", "wkhtmltopdf");
+                rotativaLocation = Path.Combine(wkhtmlPath, "wkhtmltopdf");
             }
 
             if (!File.Exists(rotativaLocation))
@@ -169,7 +235,7 @@ namespace Wkhtmltopdf.NetCore
         private static string SpecialCharsEncode(string text)
         {
             var chars = text.ToCharArray();
-            var result = new StringBuilder(text.Length + (int)(text.Length * 0.1));
+            var result = new StringBuilder(text.Length + (int) (text.Length * 0.1));
 
             foreach (var c in chars)
             {
