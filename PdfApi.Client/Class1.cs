@@ -11,7 +11,7 @@ public static class Program
             try
             {
                 HttpClient client = new HttpClient();
-                client.BaseAddress = new Uri("https://localhost:49153");
+                client.BaseAddress = new Uri("http://104.210.129.44:5000");
                 var wk = await client.PostAsJsonAsync("/wk", new WkPdfRequest()
                 {
                     Url =
@@ -41,6 +41,7 @@ public static class Program
 
                 wk.EnsureSuccessStatusCode();
                 var content = await wk.Content.ReadAsByteArrayAsync();
+                File.WriteAllBytes("hello.pdf", content);
             }
             catch (Exception ex)
             {
