@@ -26,6 +26,7 @@ For more information about how to use it, go to https://github.com/fpanaccia/Wkh
 
   <ItemGroup>
     <None Include="build\net5.0\*" Pack="true" PackagePath="build\netcoreapp3.0" />
+    <None Include="build\*.props" Pack="true" PackagePath="build" />
   </ItemGroup>
 
   <ItemGroup>
